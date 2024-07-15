@@ -16,11 +16,10 @@ create table if not exists users (
 	last_name varchar(255) not null,
 	email varchar(255) not null,
 	password varchar(24) not null, -- revisit data type
-	phone integer check (phone >= 10000000 AND phone <= 99999999)
+	phone integer,
 	-- profile_picture -- revisit when defined where to store media
-	location text, --really necessary?
 	job_title varchar(255),
-	id_manager int, -- null until assigned a manager
+	id_manager int -- null until assigned a manager
 );
 
 -- https://www.postgresql.org/docs/16/datatype-enum.html
@@ -38,8 +37,8 @@ create table if not exists requests (
 	adminNotes text,
 	resolutionInfo text,
 	id_user int not null references users (id),
-	id_manager int not null references users (id_manager),
-	id_admin int users (id) -- null until an admin takes it over
+	id_manager int not null references users (id),
+	id_admin int references users (id) -- null until an admin takes it over
 );
 
 create type role_type as enum ('user', 'manager', 'admin');
@@ -47,6 +46,6 @@ create type role_type as enum ('user', 'manager', 'admin');
 -- a user can have multiple roles, such as user-manager or user-admin
 create table if not exists users_roles (
 	id_user_role serial,
-	id_user int,
+	id_user int references users (id),
 	user_role role_type
 );
