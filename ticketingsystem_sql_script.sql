@@ -7,33 +7,37 @@ create schema system;
 
 drop schema public;
 
+-- Sets path to system in generally, even tho there's indication of the path in every create type/table.
+SET search_path TO system;
+
 -- data type serial is equivalent to auto_increment property
 -- https://www.postgresql.org/docs/16/datatype-numeric.html#DATATYPE-SERIAL
 
-create table if not exists users (
+create table if not exists SYSTEM.users (
 	id serial primary key,
 	first_name varchar(255) not null,
 	last_name varchar(255) not null,
 	email varchar(255) not null,
 	password varchar(24) not null, -- revisit data type
-	phone integer check (phone >= 10000000 AND phone <= 99999999)
+	phone integer check (phone >= 10000000 AND phone <= 99999999),
 	-- profile_picture -- revisit when defined where to store media
-	location text, --really necessary?
 	job_title varchar(255),
-	id_manager int, -- null until assigned a manager
+	id_manager int -- null until assigned a manager
 );
 
--- https://www.postgresql.org/docs/16/datatype-enum.html
-create type request_status as enum ('open', 'in progress', 'closed');
+-- Se ocupaba hacer id_manager como unique porque la referencia FK de id_manager en tabla requests impedia crear la tabla sino se hacia unique.
+ALTER TABLE system.users ADD CONSTRAINT unique_id_manager UNIQUE (id_manager);
 
-create table if not exists requests (
+-- https://www.postgresql.org/docs/16/datatype-enum.html
+create type system.request_status as enum ('open', 'in progress', 'closed');
+
+create table if not exists SYSTEM.requests (
 	id serial primary key,
 	req_type text not null, -- revisit as possible enum
 	status request_status not null,
 	title varchar(255) not null,
 	description text,
 	estimatedDueDate date, -- revisit nullable option
-	revokePermissionDate date,
 	-- attachedFile -- revisit when defined where to store media
 	adminNotes text,
 	resolutionInfo text,
@@ -42,10 +46,10 @@ create table if not exists requests (
 	id_admin int users (id) -- null until an admin takes it over
 );
 
-create type role_type as enum ('user', 'manager', 'admin');
+create type SYSTEM.role_type as enum ('user', 'manager', 'admin');
 
 -- a user can have multiple roles, such as user-manager or user-admin
-create table if not exists users_roles (
+create table if not exists SYSTEM.users_roles (
 	id_user_role serial,
 	id_user int,
 	user_role role_type
