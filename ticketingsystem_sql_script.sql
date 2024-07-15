@@ -54,3 +54,9 @@ create table if not exists SYSTEM.users_roles (
 	id_user int references users (id),
 	user_role role_type
 );
+
+/*			TESTING			*/
+
+insert into users (first_name, last_name, email, password) values ('test', 'test', 'test', 'test');
+
+select * from users;
