@@ -33,12 +33,13 @@ ALTER TABLE system.users ADD CONSTRAINT unique_id_manager UNIQUE (id_manager);
 -- Approved: Cuando IT Admin cambia status a aprobado. Posteriormente lo cierra (closed)
 -- Denied: Cuando IT Admin cambia status a rechazado. Posteriormente lo cierra (closed)
 -- Closed: Request se enlista en My tickets de IT Admin como request anteriores.
-create type system.request_status as enum ('in progress', 'approved', 'denied', 'closed');
+create type system.request_status as enum ('in progress', 'approved', 'rejected', 'closed');
 
 
 create table if not exists SYSTEM.requests (
 	id serial primary key,
-	req_type text not null, -- revisit as possible enum
+	--req_type text not null, -- revisit as possible enum
+	id_request_type INT NOT NULL REFERENCES SYSTEM.request_types(id_request_type),
 	status request_status not null,
 	title varchar(255) not null,
 	description text,
@@ -50,6 +51,12 @@ create table if not exists SYSTEM.requests (
 	id_manager int not null references users (id),
 	id_admin int references users (id) -- null until an admin takes it over
 );
+
+CREATE TABLE IF NOT EXISTS SYSTEM.request_types (
+    id_request_type SERIAL PRIMARY KEY,
+    type_name TEXT NOT NULL UNIQUE
+);
+
 
 create type SYSTEM.role_type as enum ('user', 'admin');
 
