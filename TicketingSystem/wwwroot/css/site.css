@@ -20,3 +20,36 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Clase de div contenedor de los tres div de requests y approvals. */
+.box-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 50px;
+}
+
+/* Estilos de cada caja o div interno de requests y approvals. */
+.box {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    width: 30%;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+/* Se asegura que los div con clase box y box-container tengan margenes de separacion alrededor. */
+.box-container .box:not(:last-child) {
+    margin-right: 20px;
+}
+
+/* Efecto hover */
+.box:hover {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); 
+    font-weight: bold; 
+    cursor: pointer; 
+    border-color: #007bff; 
+}
