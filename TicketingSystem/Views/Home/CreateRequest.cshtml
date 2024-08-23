@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "Create Request";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Request</h1>
+    
+
+    <!-- Div contenedor centrado y con ancho del 60% de pantalla -->
+    <div class="container bg-light-blue p-4" style="width: 60%; margin: 0 auto; background-color: #e6f7ff;">
+
+        <!-- Botones para envio del request y borrado de campos -->
+        <div class="d-flex justify-content-around mb-4">
+            <button type="button" class="btn btn-primary btn-lg active" aria-pressed="true">Send</button>
+            
+            <button type="button" class="btn btn-secondary" aria-pressed="true">Clear Fields</button>
+        </div>
+
+        <!-- Formulario de creacion del Request, centrado dentro del div -->
+        <form>
+            <div class="form-group mb-3">
+                <label for="RequestTypeControlSelect">Request Type</label>
+                <select class="form-control" id="RequestTypeControlSelect">
+                    <option value="" disabled selected>-- Select a request type --</option>
+                    <option>Pay Time Off</option>
+                    <option>Maternity Leave</option>
+                    <option>Software Install</option>
+                    <option>Hardware Fix</option>
+                </select>
+            </div>
+            <div class="form-group mb-3">
+                <label for="RequestStatusControlSelect">Status</label>
+                <select class="form-control" id="RequestStatusControlSelect">
+                    <option value="" disabled selected>-- Select a request status --</option>
+                    <option>Open</option>
+                    <option>In Progress</option>
+                    <option>Closed</option>
+                </select>
+            </div>
+            <div class="form-group mb-3">
+                <label for="titleField">Title</label>
+                <input type="text" class="form-control" id="titleField" aria-describedby="ticketTitle" placeholder="Enter a brief Title">
+            </div>
+            <div class="form-group mb-3">
+                <label for="subjectManager">Subject Ticket's Manager</label>
+                <input class="form-control" type="text" id="subjectManager" placeholder="Subject's Manager" readonly>
+            </div>
+            <div class="form-group mb-3">
+                <label for="ticketDescription">Description</label>
+                <textarea class="form-control" id="ticketDescription" rows="5"></textarea>
+            </div>
+            <div class="form-group mb-3">
+                <label for="dueDate">Estimated Due Date</label>
+                <input type="date" class="form-control" id="dueDate">
+            </div>
+            <div class="form-group mb-3">
+                <label for="attachmentFiles">Attatch a file (Optional)</label>
+                <input type="file" class="form-control-file" id="attachmentFiles">
+            </div>
+            <div class="form-group mb-3">
+                <label for="revokingDate">Estimated Revoking Permission Date (Optional)</label>
+                <input type="date" class="form-control" id="revokingDate">
+            </div>
+            <div class="form-group mb-3">
+                <label for="adminNotes">Notes</label>
+                <textarea class="form-control" id="adminNotes" rows="3"></textarea>
+            </div>
+            <div class="form-group mb-3">
+                <label for="resolutionInformation">Resolution Information</label>
+                <textarea class="form-control" id="resolutionInformation" rows="5" readonly></textarea>
+            </div>
+        </form>
+    </div>
+</div>

@@ -7,8 +7,15 @@
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 
     <div class="box-container">
-        <div class="box">Create a Request</div>
-        <div class="box">My Requests</div>
-        <div class="box">My Approvals</div>
+        <div class="box" onclick="location.href='@Url.Action("CreateRequest", "Home")';">
+            <a href="@Url.Action("CreateRequest", "Home")" class="box-link">Create Request</a>
+        </div>
+        <div class="box" onclick="location.href='@Url.Action("CreateRequest", "Home")';">
+            <a href="@Url.Action("CreateRequest", "Home")" class="box-link">My Requests</a>
+        </div>
+        <div class="box" onclick="location.href='@Url.Action("CreateRequest", "Home")';">
+            <a href="@Url.Action("CreateRequest", "Home")" class="box-link">My Approvals</a>
+        </div>
     </div>
+
 </div>
