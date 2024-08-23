@@ -39,7 +39,8 @@ CREATE TYPE SYSTEM.request_type AS ENUM ('Paid Time Off', 'Maternity Leave', 'So
 
 create table if not exists SYSTEM.requests (
 	id serial primary key,
-	req_type request_type not null, 
+	--req_type text not null, -- revisit as possible enum
+	id_request_type INT NOT NULL REFERENCES SYSTEM.request_types(id_request_type),
 	status request_status not null,
 	title varchar(255) not null,
 	description text,
@@ -50,8 +51,13 @@ create table if not exists SYSTEM.requests (
 	id_user int not null references users (id),
 	id_manager int not null references users (id),
 	id_admin int references users (id) -- null until an admin takes it over
+	creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL -- Fecha de creación del ticket
 );
 
+CREATE TABLE IF NOT EXISTS SYSTEM.request_types (
+    id_request_type SERIAL PRIMARY KEY,
+    type_name TEXT NOT NULL UNIQUE
+);
 
 create type SYSTEM.role_type as enum ('user', 'admin');
 
