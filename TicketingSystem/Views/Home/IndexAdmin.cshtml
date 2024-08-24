@@ -1,0 +1,176 @@
+﻿@{
+    ViewData["Title"] = "Home Admin";
+}
+<div class="text-center">
+    
+    <h1 class="display-4">Welcome, Administrator!</h1>
+
+</div>
+
+
+<div class="container" style="width: 80%; margin: 0 auto;">
+    <div class="row">
+
+        <div class="col-md-9">
+            <h2 class="text-start mt-5">Current Requests</h2>
+
+            <!-- Primera tabla de "REQUESTS EN PROGRESO" -->
+            <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>IDRequest</th>
+                            <th>Title</th>
+                            <th>Creation Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            <tr>
+                                <td>IDRequest</td>
+                                <td>Title</td>
+                                <td>dd/mm/yyyy</td>
+                                <td>Status</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewRequestModal" data-id="IDRequest" data-title="Title" data-status="Status" data-description="Description" data-duedate="EstimatedDueDate" data-adminnotes="AdminNotes" data-resolutioninfo="ResolutionInfo" data-requesttype="RequestType?.TypeName">
+                                        View
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>IDRequest</td>
+                                <td>Title</td>
+                                <td>dd/mm/yyyy</td>
+                                <td>Status</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewRequestModal" data-id="IDRequest" data-title="Title" data-status="Status" data-description="Description" data-duedate="EstimatedDueDate" data-adminnotes="AdminNotes" data-resolutioninfo="ResolutionInfo" data-requesttype="RequestType?.TypeName">
+                                        View
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>IDRequest</td>
+                                <td>Title</td>
+                                <td>dd/mm/yyyy</td>
+                                <td>Status</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewRequestModal" data-id="IDRequest" data-title="Title" data-status="Status" data-description="Description" data-duedate="EstimatedDueDate" data-adminnotes="AdminNotes" data-resolutioninfo="ResolutionInfo" data-requesttype="RequestType?.TypeName">
+                                        View
+                                    </button>
+                                </td>
+                            </tr>
+                    </tbody>
+             </table>
+
+            <h2 class="text-start">Previous Requests</h2>
+
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>IDRequest</th>
+                        <th>Title</th>
+                        <th>Creation Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>IDRequest</td>
+                        <td>Title</td>
+                        <td>dd/mm/yyyy</td>
+                        <td>Status</td>
+                        <td>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewRequestModal" data-id="IDRequest" data-title="Title" data-status="Status" data-description="Description" data-duedate="EstimatedDueDate" data-adminnotes="AdminNotes" data-resolutioninfo="ResolutionInfo" data-requesttype="RequestType?.TypeName">
+                                View
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>IDRequest</td>
+                        <td>Title</td>
+                        <td>dd/mm/yyyy</td>
+                        <td>Status</td>
+                        <td>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewRequestModal" data-id="IDRequest" data-title="Title" data-status="Status" data-description="Description" data-duedate="EstimatedDueDate" data-adminnotes="AdminNotes" data-resolutioninfo="ResolutionInfo" data-requesttype="RequestType?.TypeName">
+                                View
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>IDRequest</td>
+                        <td>Title</td>
+                        <td>dd/mm/yyyy</td>
+                        <td>Status</td>
+                        <td>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewRequestModal" data-id="IDRequest" data-title="Title" data-status="Status" data-description="Description" data-duedate="EstimatedDueDate" data-adminnotes="AdminNotes" data-resolutioninfo="ResolutionInfo" data-requesttype="RequestType?.TypeName">
+                                View
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+
+
+
+
+            <!-- Modal for view request -->
+            <div class="modal fade" id="viewRequestModal" tabindex="-1" aria-labelledby="viewRequestModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="viewRequestModalLabel">View Request</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Formulario de visualización del Request -->
+                            <form>
+                                <div class="form-group mb-3">
+                                    <label for="RequestTypeControlSelect">Request Type</label>
+                                    <input type="text" class="form-control" id="RequestTypeField" readonly>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="RequestStatusControlSelect">Status</label>
+                                    <input type="text" class="form-control" id="RequestStatusField" readonly>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="titleField">Title</label>
+                                    <input type="text" class="form-control" id="titleField" readonly>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="subjectManager">Subject Ticket's Manager</label>
+                                    <input class="form-control" type="text" id="subjectManager" readonly>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="ticketDescription">Description</label>
+                                    <textarea class="form-control" id="ticketDescription" rows="5" readonly></textarea>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="dueDate">Estimated Due Date</label>
+                                    <input type="date" class="form-control" id="dueDate" readonly>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="adminNotes">Notes</label>
+                                    <textarea class="form-control" id="adminNotes" rows="3" readonly></textarea>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="resolutionInformation">Resolution Information</label>
+                                    <textarea class="form-control" id="resolutionInformation" rows="5" readonly></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div> <!-- modal-content -->
+                </div> <!-- modal-dialog -->
+            </div> <!-- modal fade -->
+
+
+
+
+        </div> <!-- col-md-9 -->
+    </div> <!-- row -->
+</div> <!-- container -->
+
