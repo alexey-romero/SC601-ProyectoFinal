@@ -1,35 +1,33 @@
 ﻿@model List<TicketingSystem.Models.MyTickets>
 
 @{
-    ViewData["Title"] = "My Requests";
+    ViewData["Title"] = "My Approvals";
     Layout = "_Layout";
 }
 
 <div class="container mt-5">
     <div class="row">
         <div class="col-2">
+            <h5>Filter</h5>
             <div class="list-group">
-                <a href="@Url.Action("Index")" class="list-group-item list-group-item-action">
-                    All Tickets
+                <a href="@Url.Action("MyApprovals", new { filter = "InProgress" })" class="list-group-item list-group-item-action">
+                    Need Approval
                 </a>
-                <a href="@Url.Action("Index", new { filter = "InProgress" })" class="list-group-item list-group-item-action">
-                    Open
-                </a>
-                <a href="@Url.Action("Index", new { filter = "Closed" })" class="list-group-item list-group-item-action">
-                    Closed
+                <a href="@Url.Action("MyApprovals", new { filter = "Approved" })" class="list-group-item list-group-item-action">
+                    Approved
                 </a>
             </div>
         </div>
 
         <div class="col-md-9">
-            <h2>My Requests</h2>
+            <h2>My Approvals</h2>
 
             @if (Model != null && Model.Count > 0)
             {
                 <table class="table table-striped mt-3">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>IDRequest</th>
                             <th>Title</th>
                             <th>Creation Date</th>
                             <th>Status</th>
@@ -46,7 +44,7 @@
                                 <td>@ticket.Status</td>
                                 <td>
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewRequestModal" data-id="@ticket.IDRequest" data-title="@ticket.Title" data-status="@ticket.Status" data-description="@ticket.Description" data-duedate="@ticket.EstimatedDueDate" data-adminnotes="@ticket.AdminNotes" data-resolutioninfo="@ticket.ResolutionInfo" data-requesttype="@ticket.RequestType?.TypeName">
-                                        View Request
+                                        View
                                     </button>
                                 </td>
                             </tr>
@@ -57,7 +55,7 @@
             else
             {
                 <div class="alert alert-info mt-3" role="alert">
-                    No tickets found for the selected filter.
+                    No approved requests found at the moment.
                 </div>
             }
 
@@ -82,7 +80,11 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="titleField">Title</label>
-                                    <input type="text" class="form-control" id="titleField" aria-describedby="ticketTitle" placeholder="Enter a brief Title" readonly>
+                                    <input type="text" class="form-control" id="titleField" readonly>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="subjectManager">Subject Ticket's Manager</label>
+                                    <input class="form-control" type="text" id="subjectManager" readonly>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="ticketDescription">Description</label>
@@ -91,14 +93,6 @@
                                 <div class="form-group mb-3">
                                     <label for="dueDate">Estimated Due Date</label>
                                     <input type="date" class="form-control" id="dueDate" readonly>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="attachmentFiles">Attach a file (Optional)</label>
-                                    <input type="file" class="form-control-file" id="attachmentFiles" disabled>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="revokingDate">Estimated Revoking Permission Date (Optional)</label>
-                                    <input type="date" class="form-control" id="revokingDate" readonly>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="adminNotes">Notes</label>
@@ -129,15 +123,17 @@
                 var title = button.getAttribute('data-title');
                 var status = button.getAttribute('data-status');
                 var description = button.getAttribute('data-description');
+                var manager = button.getAttribute('data-manager');
                 var dueDate = button.getAttribute('data-duedate');
                 var adminNotes = button.getAttribute('data-adminnotes');
                 var resolutionInfo = button.getAttribute('data-resolutioninfo');
                 var requestType = button.getAttribute('data-requesttype');
 
-                // Actualiza los campos del modal con los datos del tiquete creado existente en la base de datos. 
+                // Actualizar los campos del modal
                 document.getElementById('titleField').value = title;
                 document.getElementById('RequestStatusField').value = status;
                 document.getElementById('ticketDescription').value = description;
+                document.getElementById('subjectManager').value = manager;
                 document.getElementById('dueDate').value = dueDate ? new Date(dueDate).toISOString().split('T')[0] : '';
                 document.getElementById('adminNotes').value = adminNotes;
                 document.getElementById('resolutionInformation').value = resolutionInfo;
@@ -145,4 +141,4 @@
             });
         });
     </script>
-    }
+}

@@ -5,7 +5,7 @@ namespace TicketingSystem.Controllers
 {
     public class UserTicketsController : Controller
     {
-        public IActionResult Index(string filter)
+        public IActionResult MyRequests(string filter)
         {
             // Simulación de datos (estos datos TIENEN QUE VENIR DE LA BASE DE DATOS)
             var tickets = GetTickets();
@@ -14,6 +14,30 @@ namespace TicketingSystem.Controllers
             if (Enum.TryParse(filter, out RequestStatus status))
             {
                 tickets = tickets.Where(t => t.Status == status).ToList();
+            }
+
+            return View(tickets);
+        }
+
+        public IActionResult MyApprovals(string filter)
+        {
+            // Si no se especifica un filtro, redirigir a la vista con el filtro "InProgress"
+
+            if (string.IsNullOrEmpty(filter))
+            {
+                return RedirectToAction("MyApprovals", new { filter = "InProgress" });
+            }
+
+            var tickets = GetTickets();
+
+            // Filtra los tickets por "In Progress" (Need Approval) y "Approved"
+            if (filter == "InProgress")
+            {
+                tickets = tickets.Where(t => t.Status == RequestStatus.InProgress).ToList();
+            }
+            else if (filter == "Approved")
+            {
+                tickets = tickets.Where(t => t.Status == RequestStatus.Approved).ToList();
             }
 
             return View(tickets);

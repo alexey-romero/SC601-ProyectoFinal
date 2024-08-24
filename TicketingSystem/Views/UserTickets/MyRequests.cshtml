@@ -1,0 +1,148 @@
+﻿@model List<TicketingSystem.Models.MyTickets>
+
+@{
+    ViewData["Title"] = "My Requests";
+    Layout = "_Layout";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-2">
+            <div class="list-group">
+                <a href="@Url.Action("MyRequests")" class="list-group-item list-group-item-action">
+                    All Tickets
+                </a>
+                <a href="@Url.Action("MyRequests", new { filter = "InProgress" })" class="list-group-item list-group-item-action">
+                    Open
+                </a>
+                <a href="@Url.Action("MyRequests", new { filter = "Closed" })" class="list-group-item list-group-item-action">
+                    Closed
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <h2>My Requests</h2>
+
+            @if (Model != null && Model.Count > 0)
+            {
+                <table class="table table-striped mt-3">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Creation Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ticket in Model)
+                        {
+                            <tr>
+                                <td>@ticket.IDRequest</td>
+                                <td>@ticket.Title</td>
+                                <td>@ticket.CreationDate.ToShortDateString()</td>
+                                <td>@ticket.Status</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewRequestModal" data-id="@ticket.IDRequest" data-title="@ticket.Title" data-status="@ticket.Status" data-description="@ticket.Description" data-duedate="@ticket.EstimatedDueDate" data-adminnotes="@ticket.AdminNotes" data-resolutioninfo="@ticket.ResolutionInfo" data-requesttype="@ticket.RequestType?.TypeName">
+                                        View Request
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-info mt-3" role="alert">
+                    No tickets found for the selected filter.
+                </div>
+            }
+
+            <!-- Modal for view request -->
+            <div class="modal fade" id="viewRequestModal" tabindex="-1" aria-labelledby="viewRequestModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="viewRequestModalLabel">View Request</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Formulario de visualización del Request -->
+                            <form>
+                                <div class="form-group mb-3">
+                                    <label for="RequestTypeControlSelect">Request Type</label>
+                                    <input type="text" class="form-control" id="RequestTypeField" readonly>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="RequestStatusControlSelect">Status</label>
+                                    <input type="text" class="form-control" id="RequestStatusField" readonly>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="titleField">Title</label>
+                                    <input type="text" class="form-control" id="titleField" aria-describedby="ticketTitle" placeholder="Enter a brief Title" readonly>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="ticketDescription">Description</label>
+                                    <textarea class="form-control" id="ticketDescription" rows="5" readonly></textarea>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="dueDate">Estimated Due Date</label>
+                                    <input type="date" class="form-control" id="dueDate" readonly>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="attachmentFiles">Attach a file (Optional)</label>
+                                    <input type="file" class="form-control-file" id="attachmentFiles" disabled>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="revokingDate">Estimated Revoking Permission Date (Optional)</label>
+                                    <input type="date" class="form-control" id="revokingDate" readonly>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="adminNotes">Notes</label>
+                                    <textarea class="form-control" id="adminNotes" rows="3" readonly></textarea>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="resolutionInformation">Resolution Information</label>
+                                    <textarea class="form-control" id="resolutionInformation" rows="5" readonly></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div> <!-- modal-content -->
+                </div> <!-- modal-dialog -->
+            </div> <!-- modal fade -->
+        </div> <!-- col-md-9 -->
+    </div> <!-- row -->
+</div> <!-- container -->
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var viewRequestModal = document.getElementById('viewRequestModal');
+            viewRequestModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var id = button.getAttribute('data-id');
+                var title = button.getAttribute('data-title');
+                var status = button.getAttribute('data-status');
+                var description = button.getAttribute('data-description');
+                var dueDate = button.getAttribute('data-duedate');
+                var adminNotes = button.getAttribute('data-adminnotes');
+                var resolutionInfo = button.getAttribute('data-resolutioninfo');
+                var requestType = button.getAttribute('data-requesttype');
+
+                // Actualiza los campos del modal con los datos del tiquete creado existente en la base de datos. 
+                document.getElementById('titleField').value = title;
+                document.getElementById('RequestStatusField').value = status;
+                document.getElementById('ticketDescription').value = description;
+                document.getElementById('dueDate').value = dueDate ? new Date(dueDate).toISOString().split('T')[0] : '';
+                document.getElementById('adminNotes').value = adminNotes;
+                document.getElementById('resolutionInformation').value = resolutionInfo;
+                document.getElementById('RequestTypeField').value = requestType;
+            });
+        });
+    </script>
+    }
