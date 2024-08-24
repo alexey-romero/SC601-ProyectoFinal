@@ -35,10 +35,11 @@ ALTER TABLE system.users ADD CONSTRAINT unique_id_manager UNIQUE (id_manager);
 -- Closed: Request se enlista en My tickets de IT Admin como request anteriores.
 create type system.request_status as enum ('in progress', 'approved', 'denied', 'closed');
 
+CREATE TYPE SYSTEM.request_type AS ENUM ('Paid Time Off', 'Maternity Leave', 'Software Installation/Fix', 'Hardware');
 
 create table if not exists SYSTEM.requests (
 	id serial primary key,
-	req_type text not null, -- revisit as possible enum
+	req_type request_type not null, 
 	status request_status not null,
 	title varchar(255) not null,
 	description text,
@@ -50,6 +51,7 @@ create table if not exists SYSTEM.requests (
 	id_manager int not null references users (id),
 	id_admin int references users (id) -- null until an admin takes it over
 );
+
 
 create type SYSTEM.role_type as enum ('user', 'admin');
 
