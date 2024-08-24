@@ -29,7 +29,12 @@ create table if not exists SYSTEM.users (
 ALTER TABLE system.users ADD CONSTRAINT unique_id_manager UNIQUE (id_manager);
 
 -- https://www.postgresql.org/docs/16/datatype-enum.html
-create type system.request_status as enum ('open', 'in progress', 'closed');
+-- In Progress: Cuando user normal crea el Request, ticket pasa a In progress (IT Admin puede verlo)
+-- Approved: Cuando IT Admin cambia status a aprobado. Posteriormente lo cierra (closed)
+-- Denied: Cuando IT Admin cambia status a rechazado. Posteriormente lo cierra (closed)
+-- Closed: Request se enlista en My tickets de IT Admin como request anteriores.
+create type system.request_status as enum ('in progress', 'approved', 'denied', 'closed');
+
 
 create table if not exists SYSTEM.requests (
 	id serial primary key,
@@ -46,7 +51,7 @@ create table if not exists SYSTEM.requests (
 	id_admin int references users (id) -- null until an admin takes it over
 );
 
-create type SYSTEM.role_type as enum ('user', 'manager', 'admin');
+create type SYSTEM.role_type as enum ('user', 'admin');
 
 -- a user can have multiple roles, such as user-manager or user-admin
 create table if not exists SYSTEM.users_roles (
