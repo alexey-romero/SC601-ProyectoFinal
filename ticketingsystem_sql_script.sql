@@ -37,9 +37,13 @@ create type system.request_status as enum ('in progress', 'approved', 'denied', 
 
 CREATE TYPE SYSTEM.request_type AS ENUM ('Paid Time Off', 'Maternity Leave', 'Software Installation/Fix', 'Hardware');
 
+CREATE TABLE IF NOT EXISTS SYSTEM.request_types (
+    id_request_type SERIAL PRIMARY KEY,
+    type_name TEXT NOT NULL UNIQUE
+);
+
 create table if not exists SYSTEM.requests (
 	id serial primary key,
-	--req_type text not null, -- revisit as possible enum
 	id_request_type INT NOT NULL REFERENCES SYSTEM.request_types(id_request_type),
 	status request_status not null,
 	title varchar(255) not null,
@@ -50,18 +54,14 @@ create table if not exists SYSTEM.requests (
 	resolutionInfo text,
 	id_user int not null references users (id),
 	id_manager int not null references users (id),
-	id_admin int references users (id) -- null until an admin takes it over
-	creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL -- Fecha de creación del ticket
+	id_admin int references users (id), -- null until an admin takes it over
+	creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL -- Fecha de creaciï¿½n del ticket
 );
 
-CREATE TABLE IF NOT EXISTS SYSTEM.request_types (
-    id_request_type SERIAL PRIMARY KEY,
-    type_name TEXT NOT NULL UNIQUE
-);
 
 create type SYSTEM.role_type as enum ('user', 'admin');
 
--- a user can have multiple roles, such as user-manager or user-admin
+-- a user can have multiple role or user-admin
 create table if not exists SYSTEM.users_roles (
 	id_user_role serial,
 	id_user int references users (id),
@@ -70,6 +70,53 @@ create table if not exists SYSTEM.users_roles (
 
 /*			TESTING			*/
 
-insert into users (first_name, last_name, email, password) values ('test', 'test', 'test', 'test');
-
 select * from users;
+select * from user_roles;
+select * from requests;
+select * from request_types;
+
+
+/*	Agrego rol tipo manager para que users tengan un id de manager	*/
+ALTER TYPE SYSTEM.role_type ADD VALUE 'manager';
+
+-- Insertar tres usuarios con rol 'user' normal
+
+INSERT INTO SYSTEM.users (first_name, last_name, email, password, phone, job_title, id_manager) 
+VALUES 
+('Juan', 'Perez', 'juanperez@email.com', 'password1', '1234567890', 'ingeniero junior', 6),
+('Pedro', 'Ramirez', 'pedroramirez@email.com', 'password2', '0987654321', 'ingeniero mid', 7),
+('Maria', 'Gonzalez', 'mariagonzalez@email.com', 'password3', '0987654323', 'ingeniero senior', 7);
+
+
+-- Asignarles el rol 'user' en la tabla users_roles
+INSERT INTO SYSTEM.users_roles (id_user, user_role) 
+VALUES 
+(1, 'user'), 
+(2, 'user'), 
+(3, 'user');
+
+INSERT INTO SYSTEM.users (first_name, last_name, email, password, phone, job_title, id_manager) 
+VALUES 
+('jason', 'kid', 'admin1@email.com', 'admin1rules', '546561515', 'AdminPosition1', NULL),
+('martin', 'sommers', 'admin2@email.com', 'admin2rules', '879845516', 'AdminPosition2', NULL);
+
+
+-- Asignarles el rol 'admin' en la tabla users_roles
+INSERT INTO SYSTEM.users_roles (id_user, user_role) 
+VALUES 
+(4, 'admin'), 
+(5, 'admin');
+
+
+INSERT INTO SYSTEM.users (first_name, last_name, email, password, phone, job_title, id_manager) 
+VALUES 
+('MicroManager', 'Intenso', 'manager1@email.com', 'manager1', NULL, 'ManagerPosition1', NULL),
+('ChillManager', 'BestTeam', 'manager2@email.com', 'manager2', NULL, 'ManagerPosition2', NULL);
+
+-- Asignarles el rol 'manager' en la tabla users_roles
+INSERT INTO SYSTEM.users_roles (id_user, user_role) 
+VALUES 
+(6, 'manager'), 
+(7, 'manager');
+
+
