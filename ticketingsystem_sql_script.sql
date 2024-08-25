@@ -17,7 +17,8 @@ CREATE TABLE dbo.Users (
     -- ProfilePicture -- revisit when defined where to store media
     JobTitle NVARCHAR(255),
     IdManager INT NULL,  -- NULL until assigned a manager
-    CONSTRAINT PK_Users_ID PRIMARY KEY (Id)
+    CONSTRAINT PK_Users_ID PRIMARY KEY (Id),
+    CONSTRAINT FK_Users_IdManager FOREIGN KEY (IdManager) REFERENCES dbo.Users(Id)
 );
 GO
 
@@ -34,10 +35,10 @@ GO
 CREATE TABLE dbo.Users_Roles (
 	Id_Users_Roles INT IDENTITY(1,1) NOT NULL,
 	IdUser INT NOT NULL,
-	IdRole NVARCHAR(25) NOT NULL,
+	IdRole INT NOT NULL,
 	CONSTRAINT PK_Users_Roles_ID PRIMARY KEY (Id_Users_Roles),
 	CONSTRAINT FK_User FOREIGN KEY (IdUser) REFERENCES dbo.Users(Id),
-	CONSTRAINT FK_Role FOREIGN KEY (IdUser) REFERENCES dbo.UserRole(Id)
+	CONSTRAINT FK_Role FOREIGN KEY (IdRole) REFERENCES dbo.UserRole(Id)
 );
 GO
 
@@ -87,3 +88,35 @@ CREATE TABLE dbo.Requests(
  	-- TODO: normalize ids?
 );
 GO
+
+CREATE TRIGGER TRG_Requests_SetManagerId
+ON TicketingSystem.dbo.Requests
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+   
+    UPDATE R
+    SET R.IdManager = U.IdManager
+    FROM TicketingSystem.dbo.Requests R
+    INNER JOIN Inserted I ON R.Id = I.Id
+    INNER JOIN TicketingSystem.dbo.Users U ON I.IdUser = U.Id
+    WHERE R.IdManager IS NULL;
+
+    SET NOCOUNT OFF;
+END;
+GO
+
+-------------------------- TEST DATA
+INSERT INTO TicketingSystem.dbo.Users (FirstName,LastName,Email,Password,Phone,JobTitle,IdManager) VALUES
+	 (N'Alexey',N'Romero',N'alexey@test.com',N'P123',88888888,N'Dev Manager',NULL),
+	 (N'Ricardo',N'Alfaro',N'ricardo@test.com',N'P456',88888887,N'Infra Manager',NULL),
+	 (N'Sebastian',N'Cruz',N'sebas@test.com',N'P789',88888886,N'SRE',1),
+	 (N'Alexander',N'Viquez',N'alex@test.com',N'P012',88888885,N'Support',2);
+GO
+
+INSERT INTO TicketingSystem.dbo.Users_Roles (IdUser,IdRole) VALUES
+	 (1,1),
+	 (2,2),
+	 (3,1),
+	 (4,2);
