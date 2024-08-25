@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using RepositoryLayer.Models;
 
-namespace TicketingSystem.Models;
+namespace RepositoryLayer.Models;
 
 public partial class UserRole
 {

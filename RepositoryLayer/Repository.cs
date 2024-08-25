@@ -1,4 +1,4 @@
-﻿using TicketingSystem.Models;
+﻿using RepositoryLayer.Models;
 
 namespace RepositoryLayer;
 

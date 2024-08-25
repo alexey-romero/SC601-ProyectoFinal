@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace TicketingSystem.Models;
+namespace RepositoryLayer.Models;
+
     public class MyTickets
 {
     [Key]
@@ -9,20 +10,20 @@ namespace TicketingSystem.Models;
 
     [Required]
     [StringLength(255)]
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     [ForeignKey("RequestType")]
     public int ReqTypeId { get; set; }
-    public virtual RequestType RequestType { get; set; }  // Relación con la tabla request_types
+    public virtual RequestType? RequestType { get; set; }  // Relación con la tabla request_types
 
     [Required]
-    public RequestStatus Status { get; set; }  // Enum que definiremos a continuación
+    public RequestStatus? Status { get; set; }  // Enum que definiremos a continuación
 
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     public DateTime? EstimatedDueDate { get; set; }  // Nullable
 
-    public string AdminNotes { get; set; }
+    public string? AdminNotes { get; set; }
 
     public string ResolutionInfo { get; set; }
 
@@ -44,21 +45,21 @@ namespace TicketingSystem.Models;
      public virtual User Admin { get; set; } */
 }
 
-public class RequestType
-{
-    [Key]
-    public int Id { get; set; }
+//public class RequestType
+//{
+//    [Key]
+//    public int Id { get; set; }
 
-    [Required]
-    [StringLength(255)]
-    public string TypeName { get; set; }
-}
+//    [Required]
+//    [StringLength(255)]
+//    public string TypeName { get; set; }
+//}
 
-// Enum para el estado del request
-public enum RequestStatus
-{
-    InProgress,
-    Approved,
-    Rejected,
-    Closed
-}
+//// Enum para el estado del request
+//public enum RequestStatus
+//{
+//    InProgress,
+//    Approved,
+//    Rejected,
+//    Closed
+//}

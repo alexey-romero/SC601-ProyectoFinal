@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TicketingSystem.Models;
+namespace RepositoryLayer.Models;
 
 public partial class RequestType
 {

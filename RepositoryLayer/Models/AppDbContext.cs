@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace TicketingSystem.Models;
+namespace RepositoryLayer.Models;
 
 public partial class AppDbContext : DbContext
 {

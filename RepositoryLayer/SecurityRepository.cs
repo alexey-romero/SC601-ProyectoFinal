@@ -1,5 +1,5 @@
-﻿using TicketingSystem.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using RepositoryLayer.Models;
 
 namespace RepositoryLayer;
 

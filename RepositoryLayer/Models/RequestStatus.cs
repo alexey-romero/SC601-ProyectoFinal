@@ -1,7 +1,8 @@
-﻿using System;
+﻿using RepositoryLayer.Models;
+using System;
 using System.Collections.Generic;
 
-namespace TicketingSystem.Models;
+namespace RepositoryLayer.Models;
 
 public partial class RequestStatus
 {
