@@ -1,122 +1,89 @@
-create database ticketing_system;
+USE master;
+GO
 
-create schema system;
+CREATE DATABASE TicketingSystem;
+GO
 
--- switch schema manually
--- postgresql does not possess an equivalent to mysql's or sql server's 'use'
+USE TicketingSystem;
+GO
 
-drop schema public;
-
--- Sets path to system in generally, even tho there's indication of the path in every create type/table.
-SET search_path TO system;
-
--- data type serial is equivalent to auto_increment property
--- https://www.postgresql.org/docs/16/datatype-numeric.html#DATATYPE-SERIAL
-
-create table if not exists SYSTEM.users (
-	id serial primary key,
-	first_name varchar(255) not null,
-	last_name varchar(255) not null,
-	email varchar(255) not null,
-	password varchar(24) not null, -- revisit data type
-	phone integer,
-	-- profile_picture -- revisit when defined where to store media
-	job_title varchar(255),
-	id_manager int -- null until assigned a manager
+CREATE TABLE dbo.Users (
+    Id INT IDENTITY(1,1) NOT NULL,
+    FirstName NVARCHAR(255) NOT NULL,
+    LastName NVARCHAR(255) NOT NULL,
+    Email NVARCHAR(255) NOT NULL,
+    Password NVARCHAR(24) NOT NULL,
+    Phone INT,
+    -- ProfilePicture -- revisit when defined where to store media
+    JobTitle NVARCHAR(255),
+    IdManager INT NULL,  -- NULL until assigned a manager
+    CONSTRAINT PK_Users_ID PRIMARY KEY (Id)
 );
+GO
 
--- Se ocupaba hacer id_manager como unique porque la referencia FK de id_manager en tabla requests impedia crear la tabla sino se hacia unique.
-ALTER TABLE system.users ADD CONSTRAINT unique_id_manager UNIQUE (id_manager);
+CREATE TABLE dbo.UserRole (
+	Id INT IDENTITY(1,1) NOT NULL,
+	RoleName NVARCHAR(25) NOT NULL,
+	CONSTRAINT PK_UserRole_ID PRIMARY KEY (Id)
+);
+GO
 
--- https://www.postgresql.org/docs/16/datatype-enum.html
+INSERT INTO dbo.UserRole (RoleName) VALUES ('User'), ('Admin');
+GO
+
+CREATE TABLE dbo.Users_Roles (
+	Id_Users_Roles INT IDENTITY(1,1) NOT NULL,
+	IdUser INT NOT NULL,
+	IdRole NVARCHAR(25) NOT NULL,
+	CONSTRAINT PK_Users_Roles_ID PRIMARY KEY (Id_Users_Roles),
+	CONSTRAINT FK_User FOREIGN KEY (IdUser) REFERENCES dbo.Users(Id),
+	CONSTRAINT FK_Role FOREIGN KEY (IdUser) REFERENCES dbo.UserRole(Id)
+);
+GO
+
 -- In Progress: Cuando user normal crea el Request, ticket pasa a In progress (IT Admin puede verlo)
 -- Approved: Cuando IT Admin cambia status a aprobado. Posteriormente lo cierra (closed)
 -- Denied: Cuando IT Admin cambia status a rechazado. Posteriormente lo cierra (closed)
 -- Closed: Request se enlista en My tickets de IT Admin como request anteriores.
-create type system.request_status as enum ('in progress', 'approved', 'denied', 'closed');
-
-CREATE TYPE SYSTEM.request_type AS ENUM ('Paid Time Off', 'Maternity Leave', 'Software Installation/Fix', 'Hardware');
-
-CREATE TABLE IF NOT EXISTS SYSTEM.request_types (
-    id_request_type SERIAL PRIMARY KEY,
-    type_name TEXT NOT NULL UNIQUE
+CREATE TABLE dbo.RequestStatus(
+    Id INT IDENTITY(1,1) NOT NULL,
+    Status NVARCHAR(50) NOT NULL,
+    CONSTRAINT PK_RequestStatus PRIMARY KEY (Id)
 );
+GO
 
-create table if not exists SYSTEM.requests (
-	id serial primary key,
-	id_request_type INT NOT NULL REFERENCES SYSTEM.request_types(id_request_type),
-	status request_status not null,
-	title varchar(255) not null,
-	description text,
-	estimatedDueDate date, -- revisit nullable option
-	-- attachedFile -- revisit when defined where to store media
-	adminNotes text,
-	resolutionInfo text,
-	id_user int not null references users (id),
-	id_manager int not null references users (id),
-	id_admin int references users (id), -- null until an admin takes it over
-	creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL -- Fecha de creaci�n del ticket
+INSERT INTO dbo.RequestStatus (Status) VALUES ('In Progress'), ('Approved'), ('Denied'), ('Closed');
+GO
+
+CREATE TABLE dbo.RequestType(
+    Id INT IDENTITY(1,1) NOT NULL,
+    Type NVARCHAR(50) NOT NULL,
+    CONSTRAINT PK_RequestType PRIMARY KEY (Id)
 );
+GO
 
+INSERT INTO dbo.RequestType (Type) VALUES ('Software Installation/Fix'), ('Hardware Issues'), ('System Instance Access'), ('System Environment Access');
+GO
 
-create type SYSTEM.role_type as enum ('user', 'admin');
-
--- a user can have multiple role or user-admin
-create table if not exists SYSTEM.users_roles (
-	id_user_role serial,
-	id_user int references users (id),
-	user_role role_type
+CREATE TABLE dbo.Requests(
+    Id INT IDENTITY(1,1) NOT NULL,
+    RequestType INT NOT NULL,
+    RequestStatus INT NOT NULL,
+    Title NVARCHAR(255) NOT NULL,
+    Description NVARCHAR(MAX) NULL,
+    EstimatedDueDate DATE NULL,
+    RevokePermissionDate DATE NULL,
+    AdminNotes NVARCHAR(MAX) NULL,
+    ResolutionInfo NVARCHAR(MAX) NULL,
+    IdUser INT NOT NULL,
+    IdManager INT NULL,
+    IdAdmin INT NULL,
+    CONSTRAINT PK_Requests_Id PRIMARY KEY (Id),
+	CONSTRAINT FK_Requests_Type FOREIGN KEY (RequestType) REFERENCES dbo.RequestType(Id),
+	CONSTRAINT FK_Requests_Status FOREIGN KEY (RequestStatus) REFERENCES dbo.RequestStatus(Id),
+	CONSTRAINT FK_Requests_IdUser FOREIGN KEY (IdUser) REFERENCES dbo.Users(Id),
+ 	CONSTRAINT FK_Requests_IdManager FOREIGN KEY (IdManager) REFERENCES dbo.Users(Id),
+ 	CONSTRAINT FK_Requests_IdAdmin FOREIGN KEY (IdAdmin) REFERENCES dbo.Users(Id)
+ 	-- TODO: normalize ids?
 );
-
-/*			TESTING			*/
-
-select * from users;
-select * from user_roles;
-select * from requests;
-select * from request_types;
-
-
-/*	Agrego rol tipo manager para que users tengan un id de manager	*/
-ALTER TYPE SYSTEM.role_type ADD VALUE 'manager';
-
--- Insertar tres usuarios con rol 'user' normal
-
-INSERT INTO SYSTEM.users (first_name, last_name, email, password, phone, job_title, id_manager) 
-VALUES 
-('Juan', 'Perez', 'juanperez@email.com', 'password1', '1234567890', 'ingeniero junior', 6),
-('Pedro', 'Ramirez', 'pedroramirez@email.com', 'password2', '0987654321', 'ingeniero mid', 7),
-('Maria', 'Gonzalez', 'mariagonzalez@email.com', 'password3', '0987654323', 'ingeniero senior', 7);
-
-
--- Asignarles el rol 'user' en la tabla users_roles
-INSERT INTO SYSTEM.users_roles (id_user, user_role) 
-VALUES 
-(1, 'user'), 
-(2, 'user'), 
-(3, 'user');
-
-INSERT INTO SYSTEM.users (first_name, last_name, email, password, phone, job_title, id_manager) 
-VALUES 
-('jason', 'kid', 'admin1@email.com', 'admin1rules', '546561515', 'AdminPosition1', NULL),
-('martin', 'sommers', 'admin2@email.com', 'admin2rules', '879845516', 'AdminPosition2', NULL);
-
-
--- Asignarles el rol 'admin' en la tabla users_roles
-INSERT INTO SYSTEM.users_roles (id_user, user_role) 
-VALUES 
-(4, 'admin'), 
-(5, 'admin');
-
-
-INSERT INTO SYSTEM.users (first_name, last_name, email, password, phone, job_title, id_manager) 
-VALUES 
-('MicroManager', 'Intenso', 'manager1@email.com', 'manager1', NULL, 'ManagerPosition1', NULL),
-('ChillManager', 'BestTeam', 'manager2@email.com', 'manager2', NULL, 'ManagerPosition2', NULL);
-
--- Asignarles el rol 'manager' en la tabla users_roles
-INSERT INTO SYSTEM.users_roles (id_user, user_role) 
-VALUES 
-(6, 'manager'), 
-(7, 'manager');
-
-
+GO
