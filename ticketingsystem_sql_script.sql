@@ -1,75 +1,81 @@
-create database ticketing_system;
+USE master;
+GO
 
-create schema system;
+CREATE DATABASE TicketingSystem2;
+GO
 
--- switch schema manually
--- postgresql does not possess an equivalent to mysql's or sql server's 'use'
+USE TicketingSystem2;
+GO
 
-drop schema public;
-
--- Sets path to system in generally, even tho there's indication of the path in every create type/table.
-SET search_path TO system;
-
--- data type serial is equivalent to auto_increment property
--- https://www.postgresql.org/docs/16/datatype-numeric.html#DATATYPE-SERIAL
-
-create table if not exists SYSTEM.users (
-	id serial primary key,
-	first_name varchar(255) not null,
-	last_name varchar(255) not null,
-	email varchar(255) not null,
-	password varchar(24) not null, -- revisit data type
-	phone integer,
-	-- profile_picture -- revisit when defined where to store media
-	job_title varchar(255),
-	id_manager int -- null until assigned a manager
+CREATE TABLE dbo.Users (
+    Id INT IDENTITY(1,1) NOT NULL,  -- SQL Server equivalent of serial
+    FirstName NVARCHAR(255) NOT NULL,
+    LastName NVARCHAR(255) NOT NULL,
+    Email NVARCHAR(255) NOT NULL,
+    Password NVARCHAR(24) NOT NULL,  -- You might want to revisit the data type for security reasons
+    Phone INT,
+    -- ProfilePicture -- revisit when defined where to store media
+    JobTitle NVARCHAR(255),
+    IdManager INT NULL,  -- NULL until assigned a manager
+    CONSTRAINT PK_Users_ID PRIMARY KEY (Id)
 );
+GO
 
--- Se ocupaba hacer id_manager como unique porque la referencia FK de id_manager en tabla requests impedia crear la tabla sino se hacia unique.
-ALTER TABLE system.users ADD CONSTRAINT unique_id_manager UNIQUE (id_manager);
+CREATE TABLE dbo.UserRole (
+	IdUserRole INT IDENTITY(1,1) NOT NULL,
+	IdUser INT NOT NULL,
+	RoleName NVARCHAR(25) NOT NULL,
+	CONSTRAINT PK_UserRole_ID PRIMARY KEY (IdUserRole),
+	CONSTRAINT FK_UserRole_Users FOREIGN KEY (IdUser) REFERENCES dbo.Users(Id),
+);
+GO
 
--- https://www.postgresql.org/docs/16/datatype-enum.html
+INSERT INTO dbo.UserRole (RoleName) VALUES ('User'), ('Admin');
+GO
+
+CREATE TABLE dbo.RequestStatus(
+    Id INT IDENTITY(1,1) NOT NULL,
+    Status NVARCHAR(50) NOT NULL,
+    CONSTRAINT PK_RequestStatus PRIMARY KEY (Id)
+);
+GO
+
 -- In Progress: Cuando user normal crea el Request, ticket pasa a In progress (IT Admin puede verlo)
 -- Approved: Cuando IT Admin cambia status a aprobado. Posteriormente lo cierra (closed)
 -- Denied: Cuando IT Admin cambia status a rechazado. Posteriormente lo cierra (closed)
 -- Closed: Request se enlista en My tickets de IT Admin como request anteriores.
-create type system.request_status as enum ('in progress', 'approved', 'denied', 'closed');
+INSERT INTO dbo.RequestStatus (Status) VALUES ('In Progress'), ('Approved'), ('Denied'), ('Closed');
+GO
 
-CREATE TYPE SYSTEM.request_type AS ENUM ('Paid Time Off', 'Maternity Leave', 'Software Installation/Fix', 'Hardware');
-
-create table if not exists SYSTEM.requests (
-	id serial primary key,
-	--req_type text not null, -- revisit as possible enum
-	id_request_type INT NOT NULL REFERENCES SYSTEM.request_types(id_request_type),
-	status request_status not null,
-	title varchar(255) not null,
-	description text,
-	estimatedDueDate date, -- revisit nullable option
-	-- attachedFile -- revisit when defined where to store media
-	adminNotes text,
-	resolutionInfo text,
-	id_user int not null references users (id),
-	id_manager int not null references users (id),
-	id_admin int references users (id) -- null until an admin takes it over
-	creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL -- Fecha de creación del ticket
+CREATE TABLE dbo.RequestType(
+    Id INT IDENTITY(1,1) NOT NULL,
+    Type NVARCHAR(50) NOT NULL,
+    CONSTRAINT PK_RequestType PRIMARY KEY (Id)
 );
+GO
 
-CREATE TABLE IF NOT EXISTS SYSTEM.request_types (
-    id_request_type SERIAL PRIMARY KEY,
-    type_name TEXT NOT NULL UNIQUE
+INSERT INTO dbo.RequestType (Type) VALUES ('Software Installation/Fix'), ('Hardware Issues'), ('System Instance Access'), ('System Environment Access');
+GO
+
+CREATE TABLE dbo.Requests(
+    Id INT IDENTITY(1,1) NOT NULL,
+    RequestType INT NOT NULL,
+    RequestStatus INT NOT NULL,
+    Title NVARCHAR(255) NOT NULL,
+    Description NVARCHAR(MAX) NULL,
+    EstimatedDueDate DATE NULL,
+    RevokePermissionDate DATE NULL,
+    AdminNotes NVARCHAR(MAX) NULL,
+    ResolutionInfo NVARCHAR(MAX) NULL,
+    IdUser INT NOT NULL, -- Assuming you will reference a Users table
+    IdManager INT NULL,  -- Assuming you will reference a Users table
+    IdAdmin INT NULL,    -- Assuming you will reference a Users table
+    CONSTRAINT PK_Requests_Id PRIMARY KEY (Id),
+	CONSTRAINT FK_Requests_Type FOREIGN KEY (RequestType) REFERENCES dbo.RequestType(Id),
+	CONSTRAINT FK_Requests_Status FOREIGN KEY (RequestStatus) REFERENCES dbo.RequestStatus(Id),
+	CONSTRAINT FK_Requests_IdUser FOREIGN KEY (IdUser) REFERENCES dbo.Users(Id),
+ 	CONSTRAINT FK_Requests_IdManager FOREIGN KEY (IdManager) REFERENCES dbo.Users(Id),
+ 	CONSTRAINT FK_Requests_IdAdmin FOREIGN KEY (IdAdmin) REFERENCES dbo.Users(Id)
+ 	-- TODO: normalize ids?
 );
-
-create type SYSTEM.role_type as enum ('user', 'admin');
-
--- a user can have multiple roles, such as user-manager or user-admin
-create table if not exists SYSTEM.users_roles (
-	id_user_role serial,
-	id_user int references users (id),
-	user_role role_type
-);
-
-/*			TESTING			*/
-
-insert into users (first_name, last_name, email, password) values ('test', 'test', 'test', 'test');
-
-select * from users;
+GO
