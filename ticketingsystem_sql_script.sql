@@ -1,18 +1,18 @@
 USE master;
 GO
 
-CREATE DATABASE TicketingSystem2;
+CREATE DATABASE TicketingSystem;
 GO
 
-USE TicketingSystem2;
+USE TicketingSystem;
 GO
 
 CREATE TABLE dbo.Users (
-    Id INT IDENTITY(1,1) NOT NULL,  -- SQL Server equivalent of serial
+    Id INT IDENTITY(1,1) NOT NULL,
     FirstName NVARCHAR(255) NOT NULL,
     LastName NVARCHAR(255) NOT NULL,
     Email NVARCHAR(255) NOT NULL,
-    Password NVARCHAR(24) NOT NULL,  -- You might want to revisit the data type for security reasons
+    Password NVARCHAR(24) NOT NULL,
     Phone INT,
     -- ProfilePicture -- revisit when defined where to store media
     JobTitle NVARCHAR(255),
@@ -41,6 +41,10 @@ CREATE TABLE dbo.Users_Roles (
 );
 GO
 
+-- In Progress: Cuando user normal crea el Request, ticket pasa a In progress (IT Admin puede verlo)
+-- Approved: Cuando IT Admin cambia status a aprobado. Posteriormente lo cierra (closed)
+-- Denied: Cuando IT Admin cambia status a rechazado. Posteriormente lo cierra (closed)
+-- Closed: Request se enlista en My tickets de IT Admin como request anteriores.
 CREATE TABLE dbo.RequestStatus(
     Id INT IDENTITY(1,1) NOT NULL,
     Status NVARCHAR(50) NOT NULL,
@@ -71,9 +75,9 @@ CREATE TABLE dbo.Requests(
     RevokePermissionDate DATE NULL,
     AdminNotes NVARCHAR(MAX) NULL,
     ResolutionInfo NVARCHAR(MAX) NULL,
-    IdUser INT NOT NULL, -- Assuming you will reference a Users table
-    IdManager INT NULL,  -- Assuming you will reference a Users table
-    IdAdmin INT NULL,    -- Assuming you will reference a Users table
+    IdUser INT NOT NULL,
+    IdManager INT NULL,
+    IdAdmin INT NULL,
     CONSTRAINT PK_Requests_Id PRIMARY KEY (Id),
 	CONSTRAINT FK_Requests_Type FOREIGN KEY (RequestType) REFERENCES dbo.RequestType(Id),
 	CONSTRAINT FK_Requests_Status FOREIGN KEY (RequestStatus) REFERENCES dbo.RequestStatus(Id),
