@@ -88,3 +88,35 @@ CREATE TABLE dbo.Requests(
  	-- TODO: normalize ids?
 );
 GO
+
+CREATE TRIGGER TRG_Requests_SetManagerId
+ON TicketingSystem.dbo.Requests
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+   
+    UPDATE R
+    SET R.IdManager = U.IdManager
+    FROM TicketingSystem.dbo.Requests R
+    INNER JOIN Inserted I ON R.Id = I.Id
+    INNER JOIN TicketingSystem.dbo.Users U ON I.IdUser = U.Id
+    WHERE R.IdManager IS NULL;
+
+    SET NOCOUNT OFF;
+END;
+GO
+
+-------------------------- TEST DATA
+INSERT INTO TicketingSystem.dbo.Users (FirstName,LastName,Email,Password,Phone,JobTitle,IdManager) VALUES
+	 (N'Alexey',N'Romero',N'alexey@test.com',N'P123',88888888,N'Dev Manager',NULL),
+	 (N'Ricardo',N'Alfaro',N'ricardo@test.com',N'P456',88888887,N'Infra Manager',NULL),
+	 (N'Sebastian',N'Cruz',N'sebas@test.com',N'P789',88888886,N'SRE',1),
+	 (N'Alexander',N'Viquez',N'alex@test.com',N'P012',88888885,N'Support',2);
+GO
+
+INSERT INTO TicketingSystem.dbo.Users_Roles (IdUser,IdRole) VALUES
+	 (1,1),
+	 (2,2),
+	 (3,1),
+	 (4,2);
