@@ -22,15 +22,23 @@ CREATE TABLE dbo.Users (
 GO
 
 CREATE TABLE dbo.UserRole (
-	IdUserRole INT IDENTITY(1,1) NOT NULL,
-	IdUser INT NOT NULL,
+	Id INT IDENTITY(1,1) NOT NULL,
 	RoleName NVARCHAR(25) NOT NULL,
-	CONSTRAINT PK_UserRole_ID PRIMARY KEY (IdUserRole),
-	CONSTRAINT FK_UserRole_Users FOREIGN KEY (IdUser) REFERENCES dbo.Users(Id),
+	CONSTRAINT PK_UserRole_ID PRIMARY KEY (Id)
 );
 GO
 
 INSERT INTO dbo.UserRole (RoleName) VALUES ('User'), ('Admin');
+GO
+
+CREATE TABLE dbo.Users_Roles (
+	Id_Users_Roles INT IDENTITY(1,1) NOT NULL,
+	IdUser INT NOT NULL,
+	IdRole NVARCHAR(25) NOT NULL,
+	CONSTRAINT PK_Users_Roles_ID PRIMARY KEY (Id_Users_Roles),
+	CONSTRAINT FK_User FOREIGN KEY (IdUser) REFERENCES dbo.Users(Id),
+	CONSTRAINT FK_Role FOREIGN KEY (IdUser) REFERENCES dbo.Users(Id)
+);
 GO
 
 CREATE TABLE dbo.RequestStatus(
@@ -40,10 +48,6 @@ CREATE TABLE dbo.RequestStatus(
 );
 GO
 
--- In Progress: Cuando user normal crea el Request, ticket pasa a In progress (IT Admin puede verlo)
--- Approved: Cuando IT Admin cambia status a aprobado. Posteriormente lo cierra (closed)
--- Denied: Cuando IT Admin cambia status a rechazado. Posteriormente lo cierra (closed)
--- Closed: Request se enlista en My tickets de IT Admin como request anteriores.
 INSERT INTO dbo.RequestStatus (Status) VALUES ('In Progress'), ('Approved'), ('Denied'), ('Closed');
 GO
 
