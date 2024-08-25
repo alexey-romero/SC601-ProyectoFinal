@@ -17,7 +17,8 @@ CREATE TABLE dbo.Users (
     -- ProfilePicture -- revisit when defined where to store media
     JobTitle NVARCHAR(255),
     IdManager INT NULL,  -- NULL until assigned a manager
-    CONSTRAINT PK_Users_ID PRIMARY KEY (Id)
+    CONSTRAINT PK_Users_ID PRIMARY KEY (Id),
+    CONSTRAINT FK_Users_IdManager FOREIGN KEY (IdManager) REFERENCES dbo.Users(Id)
 );
 GO
 
@@ -34,10 +35,10 @@ GO
 CREATE TABLE dbo.Users_Roles (
 	Id_Users_Roles INT IDENTITY(1,1) NOT NULL,
 	IdUser INT NOT NULL,
-	IdRole NVARCHAR(25) NOT NULL,
+	IdRole INT NOT NULL,
 	CONSTRAINT PK_Users_Roles_ID PRIMARY KEY (Id_Users_Roles),
 	CONSTRAINT FK_User FOREIGN KEY (IdUser) REFERENCES dbo.Users(Id),
-	CONSTRAINT FK_Role FOREIGN KEY (IdUser) REFERENCES dbo.UserRole(Id)
+	CONSTRAINT FK_Role FOREIGN KEY (IdRole) REFERENCES dbo.UserRole(Id)
 );
 GO
 
