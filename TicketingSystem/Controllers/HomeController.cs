@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using TicketingSystem.Models;
+using TicketingSystem.Filters;
 
 namespace TicketingSystem.Controllers
 {
+    [ServiceFilter(typeof(CustomAuthorizationFilter))]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

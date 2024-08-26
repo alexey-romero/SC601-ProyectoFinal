@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicketingSystem", "Ticketin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryLayer", "..\RepositoryLayer\RepositoryLayer.csproj", "{05B7EF7B-82E1-4CE7-B979-8CB69F562285}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityLayer", "..\SecurityLayer\SecurityLayer.csproj", "{85751975-BB8A-4BD0-9C16-AA0150C73659}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLayer", "..\SecurityLayer\SecurityLayer.csproj", "{85751975-BB8A-4BD0-9C16-AA0150C73659}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

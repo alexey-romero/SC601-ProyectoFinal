@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RepositoryLayer\RepositoryLayer.csproj" />
-    <ProjectReference Include="..\TicketingSystem\TicketingSystem.csproj" />
   </ItemGroup>
 
 </Project>

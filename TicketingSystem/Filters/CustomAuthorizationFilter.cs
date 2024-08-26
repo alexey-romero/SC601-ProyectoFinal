@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using TicketingSystem.Controllers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Security.Claims;
 
-namespace SecurityLayer.Filters;
+namespace TicketingSystem.Filters;
 
 public class CustomAuthorizationFilter : IAuthorizationFilter
 {
