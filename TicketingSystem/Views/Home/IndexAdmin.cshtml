@@ -1,9 +1,12 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     ViewData["Title"] = "Home Admin";
+    var userName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Guest";
+    // var userName = "RachMax";
 }
 <div class="text-center">
     
-    <h1 class="display-4">Welcome, Administrator!</h1>
+    <h1 class="display-4">Welcome, @userName!</h1>
 
 </div>
 

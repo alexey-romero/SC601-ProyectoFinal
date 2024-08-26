@@ -35,7 +35,10 @@ namespace TicketingSystem.Controllers
 
                     var claims = new List<Claim>
                     {
-                        new Claim(ClaimTypes.Name, model.Email),
+                        new Claim("UserId", user.Id.ToString()),
+                        new Claim(ClaimTypes.Email, model.Email),
+                        new Claim(ClaimTypes.Name, user.FirstName),
+                        new Claim(ClaimTypes.Role, userRole.RoleName)
                     };
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
