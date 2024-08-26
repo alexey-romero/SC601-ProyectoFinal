@@ -1,4 +1,5 @@
-﻿@{
+﻿@model TicketingSystem.Models.RequestModel
+@{
     ViewData["Title"] = "Create Request";
 }
 
@@ -10,7 +11,7 @@
     <div class="container bg-light-blue p-4" style="width: 60%; margin: 0 auto; background-color: #e6f7ff;">
         
         <!-- Formulario de creacion del Request, centrado dentro del div -->
-        <form id="createRequestForm" method="post" asp-action="CreateRequest">
+        <form id="createRequestForm" method="post" asp-controller="CreateRequest" asp-action="CreateRequest">
             <div class="form-group mb-3">
                 <label for="RequestTypeControlSelect">Request Type</label>
                 <select class="form-control" id="RequestTypeControlSelect" name="RequestTypeId">

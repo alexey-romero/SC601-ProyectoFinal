@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TicketingSystem.Architecture;
-using TicketingSystem.Data;
+using TicketingSystem.Controllers.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
