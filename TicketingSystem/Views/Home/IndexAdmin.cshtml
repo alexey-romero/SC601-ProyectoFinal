@@ -2,18 +2,28 @@
 @{
     ViewData["Title"] = "Home Admin";
     var userName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Guest";
+    var userRole = User.FindFirst(ClaimTypes.Role)?.Value ?? "Guest";
     // var userName = "RachMax";
 }
 <div class="text-center">
-    
     <h1 class="display-4">Welcome, @userName!</h1>
-
+    <h4>Role type: @userRole</h4>
 </div>
 
 
 <div class="container" style="width: 80%; margin: 0 auto;">
     <div class="row">
-
+        <div class="box-container">
+            <div class="box" onclick="location.href='@Url.Action("CreateRequest", "Home")';">
+                <a href="@Url.Action("CreateRequest", "Home")" class="box-link">Create Request</a>
+            </div>
+            <div class="box" onclick="location.href='@Url.Action("MyRequests", "UserTickets")';">
+                <a href="@Url.Action("MyRequests", "UserTickets")" class="box-link">My Requests</a>
+            </div>
+            <div class="box" onclick="location.href='@Url.Action("MyApprovals", "UserTickets")';">
+                <a href="@Url.Action("MyApprovals", "UserTickets")" class="box-link">My Approvals</a>
+            </div>
+        </div>
         <div class="col-md-9">
             <h2 class="text-start mt-5">Current Requests</h2>
 
