@@ -1,33 +1,63 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RepositoryLayer.Models;
 using ServiceLayer;
+using System.Security.Claims;
 using TicketingSystem.Models;
 
 namespace TicketingSystem.Controllers
 {
-    public class CreateRequestController : Controller
+    public class CreateRequestController(IRequestService requestService) : Controller
     {
-        private readonly IRequestService _requestService;
+        private readonly IRequestService _requestService = requestService;
 
-        public CreateRequestController(IRequestService requestService)
+        [HttpGet]
+        public IActionResult CreateRequest()
         {
-            _requestService = requestService;
-        }
-
-        public IActionResult Index()
-        {
-            return View("/Views/Home/CreateRequest.cshtml");
+            return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateRequest(RequestModel model)
         {
-            var requestTypes = await _requestService.GetRequestTypes();
-            if (requestTypes != null)
+            //var requestTypes = await _requestService.GetRequestTypes();
+            //if (requestTypes != null)
+            //{
+            //    ViewBag.RequestTypes = requestTypes;
+            //}
+
+            var userIdClaim = User.FindFirst("UserId")?.Value;
+
+            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
             {
-                ViewBag.RequestTypes = requestTypes;
+                return BadRequest("User ID not found or invalid.");
             }
+
+            if (ModelState.IsValid)
+            {
+                var request = new RepositoryLayer.Models.Request
+                {
+                    RequestType = 1,
+                    RequestStatus = 1,
+                    Title = model.Title,
+                    Description = model.Description,
+                    IdUser = userId
+                };
+
+                bool result = await _requestService.CreateRequest(request);
+
+                if (result)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
+            ModelState.AddModelError("", "An error occurred while creating the request.");
             return View(model);
         }
+
+        /**
+         * ENDPOINTS PARA PROBAR LA DATA SIN TENER QUE ACCEDER AL SISTEMA COMO TAL
+         * **/
 
         // TEST THAT THE PROGRAM RECOGNIZES THE REQUEST TYPES
         // https://localhost:7154/api/request-types
@@ -47,7 +77,7 @@ namespace TicketingSystem.Controllers
             return Ok(requestTypes);
         }
 
-        // TEST THAT THE PROGRAM RECOGNIZES THE UNASSIGNED REQUESTS
+        // TEST THAT THE PROGRAM RECOGNIZES BOTH ALL REQUESTS AND UNASSIGNED REQUESTS WITH QUERY PARAM
         [HttpGet("api/requests")]
         public async Task<IActionResult> GetRequests([FromQuery] string q)
         {
@@ -66,6 +96,7 @@ namespace TicketingSystem.Controllers
             return BadRequest("Invalid query parameter.");
         }
 
+        // TEST THAT THE PROGRAM RECOGNIZES THE REQUESTS BASED ON USERID
         [HttpGet("api/requests/{userId}")]
         public async Task<IActionResult> GetRequestsByUserIdApi(int userId)
         {

@@ -10,6 +10,8 @@ namespace RepositoryLayer
         Task<List<RequestType>> GetRequestTypesAsync();
         Task<List<RequestStatus>> GetRequestStatusesAsync();
         Task<List<Request>> GetRequestsByUserIdAsync(int userId);
+        Task<bool> CreateRequestAsync(Request request);
+
     }
 
     public class RequestRepository(AppDbContext context) : Repository(context), IRequestRepository
@@ -37,6 +39,13 @@ namespace RepositoryLayer
         public async Task<List<Request>> GetRequestsByUserIdAsync(int userId)
         {
             return await Context.Requests.Where(r => r.IdUser == userId).ToListAsync();
+        }
+
+        public async Task<bool> CreateRequestAsync(Request request)
+        {
+            Context.Requests.Add(request);
+            await Context.SaveChangesAsync();
+            return true;
         }
     }
 }

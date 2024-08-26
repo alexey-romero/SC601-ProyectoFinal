@@ -15,6 +15,7 @@ namespace ServiceLayer
         Task<List<RequestType>> GetRequestTypes();
         Task<List<RequestStatus>> GetRequestStatuses();
         Task<List<Request>> GetRequestsByUserId(int userId);
+        Task<bool> CreateRequest(Request request);
     }
 
     public class RequestService(IRequestRepository repository) : IRequestService
@@ -44,6 +45,11 @@ namespace ServiceLayer
         public async Task<List<Request>> GetRequestsByUserId(int userId)
         {
             return await _requestRepository.GetRequestsByUserIdAsync(userId);
+        }
+
+        public async Task<bool> CreateRequest(Request request)
+        {
+            return await _requestRepository.CreateRequestAsync(request);
         }
     }
 }

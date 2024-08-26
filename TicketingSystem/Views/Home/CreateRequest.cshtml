@@ -3,21 +3,14 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Request</h1>
+    <h1 class="display-4">Create a Service Request</h1>
     
 
     <!-- Div contenedor centrado y con ancho del 60% de pantalla -->
     <div class="container bg-light-blue p-4" style="width: 60%; margin: 0 auto; background-color: #e6f7ff;">
-
-        <!-- Botones para envio del request y borrado de campos -->
-        <div class="d-flex justify-content-around mb-4">
-            <button type="submit" class="btn btn-primary btn-lg active" aria-pressed="true">Send</button>
-            
-            <button type="button" class="btn btn-secondary" aria-pressed="true">Clear Fields</button>
-        </div>
         
         <!-- Formulario de creacion del Request, centrado dentro del div -->
-        <form id="createRequestForm" method="post" action="/Request/Create">
+        <form id="createRequestForm" method="post" asp-action="CreateRequest">
             <div class="form-group mb-3">
                 <label for="RequestTypeControlSelect">Request Type</label>
                 <select class="form-control" id="RequestTypeControlSelect" name="RequestTypeId">
@@ -71,9 +64,12 @@
                 <label for="resolutionInformation">Resolution Information</label>
                 <textarea class="form-control" id="resolutionInformation" name="ResolutionInformation" rows="5" readonly></textarea>
             </div>
+            <!-- Botones para envio del request y borrado de campos -->
+            <div class="d-flex justify-content-around mb-4">
+                <button type="submit" class="btn btn-primary btn-lg active" aria-pressed="true">Send</button>
+
+                <button type="button" class="btn btn-secondary" aria-pressed="true">Clear Fields</button>
+            </div>
         </form>
     </div>
 </div>
-
-<script src="~/js/site.js"></script>
-
