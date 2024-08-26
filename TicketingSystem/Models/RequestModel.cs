@@ -2,8 +2,8 @@
 {
     public class RequestModel
     {
-        public int RequestTypeId { get; set; } 
-        public string RequestType { get; set; } 
+        //public int RequestTypeId { get; set; } 
+        //public string RequestType { get; set; } 
         public string Status { get; set; }
         public string Title { get; set; } 
         public string SubjectManager { get; set; } // QUE ES ESTO????????????????
