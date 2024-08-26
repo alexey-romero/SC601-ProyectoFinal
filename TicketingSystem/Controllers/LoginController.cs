@@ -3,15 +3,16 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.Net;
-using RepositoryLayer.Models;
 using TicketingSystem.Models;
+using RepositoryLayer;
+using ServiceLayer;
 
 namespace APS.Web.Controllers
 {
-    public class LoginController(ISecurityService service) : Controller
+    public class LoginController(ISecurityService securityService, IRepositoryService repositoryService) : Controller
     {
-        private readonly ISecurityService _service = service;
+        private readonly ISecurityService _securityService = securityService;
+        private readonly IRepositoryService _repositoryService = repositoryService;
 
         public IActionResult Index()
         {
@@ -24,23 +25,20 @@ namespace APS.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                bool result = await _service.AuthUserByEmailAsync(new RepositoryLayer.Models.User { Email = model.Email, Password = model.Password });
-                // Este método busca al usuario en la base de datos y verifica que la contraseña sea correcta.
+                bool result = await _securityService.AuthUserByEmailAsync(new RepositoryLayer.Models.User { Email = model.Email, Password = model.Password });
 
                 if (result)
                 {
-                    // si el resultado es exitoso se crea una lista de claims.
+                    var user = await _repositoryService.GetUserByEmail(model.Email);
+
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, model.Email),
-                        // Un claim es una declaración sobre el usuario, como su nombre, rol, etc.
-                        // Aquí, estamos añadiendo un claim con el tipo ClaimTypes.Name y el valor del correo electrónico del usuario.
                     };
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-                    // Esto establece las cookies de autenticación y asegura que el usuario esté autenticado para futuras solicitudes.
 
                     return RedirectToAction("Index", "Home");
                 }

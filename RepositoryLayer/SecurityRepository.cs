@@ -8,7 +8,6 @@ public interface ISecurityRepository
     Task<bool> AuthenticateUserAsync(User user);
     Task<bool> AuthorizeUserAsync(User user);
     Task<bool> RegisterUserAsync(User user);
-
 }
 
 public class SecurityRepository(AppDbContext context) : Repository(context), ISecurityRepository
@@ -53,4 +52,5 @@ public class SecurityRepository(AppDbContext context) : Repository(context), ISe
         return true;
     }
 
+    
 }

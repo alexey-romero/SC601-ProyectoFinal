@@ -103,18 +103,25 @@ public partial class AppDbContext : DbContext
             entity.ToTable("Users_Roles");
 
             entity.Property(e => e.IdUsersRoles).HasColumnName("Id_Users_Roles");
-            entity.Property(e => e.IdRole).HasMaxLength(25);
 
-            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.UsersRoles)
+            entity.Property(e => e.IdUser).HasColumnName("IdUser");
+
+            entity.Property(e => e.IdRole).HasColumnName("IdRole");
+
+            entity.HasOne(d => d.IdUserNavigation)
+                .WithMany(p => p.UsersRoles)
                 .HasForeignKey(d => d.IdUser)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_User");
 
-            entity.HasOne(d => d.IdUser1).WithMany(p => p.UsersRoles)
-                .HasForeignKey(d => d.IdUser)
+            entity.HasOne(d => d.IdRoleNavigation)
+                .WithMany(p => p.UsersRoles)
+                .HasForeignKey(d => d.IdRole)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Role");
         });
+
+
 
         OnModelCreatingPartial(modelBuilder);
     }

@@ -1,8 +1,15 @@
-﻿using RepositoryLayer.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RepositoryLayer.Models;
 
 namespace RepositoryLayer;
 
-public class Repository(AppDbContext context)
+public interface IRepository
+{
+    Task<User> GetUserByEmailAsync(string email);
+    Task<UserRole> GetUserRoleAsync(int userId);
+}
+
+public class Repository(AppDbContext context): IRepository
 {
     private readonly AppDbContext _context = context;
     protected AppDbContext Context => _context;
@@ -17,4 +24,21 @@ public class Repository(AppDbContext context)
         var found = await _context.FindAsync<T>([id]);
         return found;
     }
+
+    public async Task<User> GetUserByEmailAsync(string email)
+    {
+        return await Context.Users.FirstOrDefaultAsync(u => u.Email == email);
+    }
+
+    public async Task<UserRole> GetUserRoleAsync(int userId)
+    {
+        // Assuming _context is your DbContext and UsersRoles is your DbSet<UsersRole>
+        var userRole = await _context.UsersRoles
+            .Include(ur => ur.IdRoleNavigation) // Include the related UserRole entity
+            .FirstOrDefaultAsync(ur => ur.IdUser == userId); // Find the first UsersRole entry for the given userId
+
+        return userRole?.IdRoleNavigation; // Return the related UserRole, or null if not found
+    }
+
+
 }

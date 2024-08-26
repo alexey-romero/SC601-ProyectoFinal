@@ -43,13 +43,15 @@ else
         }
     }
 </ul> *@
-
 <ul class="navbar-nav ml-auto">
+    @if (User.Identity.IsAuthenticated)
+{
     <li class="nav-item">
                 <form asp-action="Logout" asp-controller="Login" method="post" class="form-inline">
                     <button type="submit" class="btn btn-link nav-link">Logout</button>
                 </form>
             </li>
+}
             <li class="nav-item">
                 <form asp-controller="Register" method="post" class="form-inline">
                     <button type="submit" class="btn btn-link nav-link">Register</button>
