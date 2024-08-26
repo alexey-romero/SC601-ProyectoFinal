@@ -46,5 +46,44 @@ namespace TicketingSystem.Controllers
             var requestTypes = await _requestService.GetRequestStatuses();
             return Ok(requestTypes);
         }
+
+        // TEST THAT THE PROGRAM RECOGNIZES THE UNASSIGNED REQUESTS
+        [HttpGet("api/requests")]
+        public async Task<IActionResult> GetRequests([FromQuery] string q)
+        {
+            // Check the query parameter value
+            if (q == "unassigned")
+            {
+                var unassignedRequests = await _requestService.GetAllUnassignedRequests();
+                return Ok(unassignedRequests);
+            }
+            else if (q == null)
+            {
+                var requestTypes = await _requestService.GetAllRequests();
+                return Ok(requestTypes);
+
+            }
+
+            return BadRequest("Invalid query parameter.");
+        }
+
+        [HttpGet("api/requests/{userId}")]
+        public async Task<IActionResult> GetRequestsByUserIdApi(int userId)
+        {
+            try
+            {
+                var requests = await _requestService.GetRequestsByUserId(userId);
+                if (requests == null || !requests.Any())
+                {
+                    return NotFound("No requests found for the specified user.");
+                }
+                return Ok(requests);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing your request." + ex);
+            }
+        }
+
     }
 }

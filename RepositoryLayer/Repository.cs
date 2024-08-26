@@ -39,6 +39,4 @@ public class Repository(AppDbContext context): IRepository
 
         return userRole?.IdRoleNavigation; // Return the related UserRole, or null if not found
     }
-
-
 }

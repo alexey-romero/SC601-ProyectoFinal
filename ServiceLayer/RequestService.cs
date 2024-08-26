@@ -10,13 +10,26 @@ namespace ServiceLayer
 {
     public interface IRequestService
     {
+        Task<List<Request>> GetAllRequests();
+        Task<List<Request>> GetAllUnassignedRequests();
         Task<List<RequestType>> GetRequestTypes();
         Task<List<RequestStatus>> GetRequestStatuses();
+        Task<List<Request>> GetRequestsByUserId(int userId);
     }
 
     public class RequestService(IRequestRepository repository) : IRequestService
     {
         private readonly IRequestRepository _requestRepository = repository;
+
+        public async Task<List<Request>> GetAllRequests()
+        {
+            return await _requestRepository.GetAllRequestsAsync();
+        }
+
+        public async Task<List<Request>> GetAllUnassignedRequests()
+        {
+            return await _requestRepository.GetAllUnassignedRequestsAsync();
+        }
 
         public async Task<List<RequestType>> GetRequestTypes()
         {
@@ -26,6 +39,11 @@ namespace ServiceLayer
         public async Task<List<RequestStatus>> GetRequestStatuses()
         {
             return await _requestRepository.GetRequestStatusesAsync();
+        }
+
+        public async Task<List<Request>> GetRequestsByUserId(int userId)
+        {
+            return await _requestRepository.GetRequestsByUserIdAsync(userId);
         }
     }
 }
