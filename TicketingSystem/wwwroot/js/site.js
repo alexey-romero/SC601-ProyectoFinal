@@ -38,4 +38,26 @@ sendButton.addEventListener("click", function (event) {
     }
 });
 
+function toggleEditMode() {
+    const fields = document.querySelectorAll('#viewRequestModal input, #viewRequestModal textarea');
+    const editButton = document.getElementById('editButton');
+
+    if (editButton.textContent === 'Edit') {
+        // Change to edit mode
+        fields.forEach(field => field.removeAttribute('readonly'));
+        fields.forEach(field => field.style.backgroundColor = 'white');
+        editButton.textContent = 'Save';
+        editButton.classList.remove('btn-primary');
+        editButton.classList.add('btn-success');
+    } else {
+        // Change to view mode
+        fields.forEach(field => field.setAttribute('readonly', 'true'));
+        fields.forEach(field => field.style.backgroundColor = '#e9ecef');
+        editButton.textContent = 'Edit';
+        editButton.classList.remove('btn-success');
+        editButton.classList.add('btn-primary');
+    }
+}
+
+
 
