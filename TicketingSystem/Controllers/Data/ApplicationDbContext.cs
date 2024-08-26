@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace TicketingSystem.Data
+namespace TicketingSystem.Controllers.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {

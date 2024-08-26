@@ -25,6 +25,8 @@ namespace TicketingSystem.Controllers
             //    ViewBag.RequestTypes = requestTypes;
             //}
 
+            Console.WriteLine(model);
+
             var userIdClaim = User.FindFirst("UserId")?.Value;
 
             if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
@@ -32,8 +34,7 @@ namespace TicketingSystem.Controllers
                 return BadRequest("User ID not found or invalid.");
             }
 
-            if (ModelState.IsValid)
-            {
+            
                 var request = new RepositoryLayer.Models.Request
                 {
                     RequestType = 1,
@@ -49,7 +50,6 @@ namespace TicketingSystem.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
-            }
 
             ModelState.AddModelError("", "An error occurred while creating the request.");
             return View(model);
