@@ -7,7 +7,7 @@ using TicketingSystem.Models;
 using RepositoryLayer;
 using ServiceLayer;
 
-namespace APS.Web.Controllers
+namespace TicketingSystem.Controllers
 {
     public class LoginController(ISecurityService securityService, IRepositoryService repositoryService) : Controller
     {
@@ -31,6 +31,8 @@ namespace APS.Web.Controllers
                 {
                     var user = await _repositoryService.GetUserByEmail(model.Email);
 
+                    var userRole = await _repositoryService.GetUserRole(user.Id);
+
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, model.Email),
@@ -40,7 +42,14 @@ namespace APS.Web.Controllers
 
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                    return RedirectToAction("Index", "Home");
+                    if (userRole.Id == 2)
+                    {
+                        return RedirectToAction("IndexAdmin", "Home");
+                    }
+                    else if (userRole.Id == 1)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
 
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
@@ -58,4 +67,4 @@ namespace APS.Web.Controllers
             return RedirectToAction("Index", "Login");
         }
     }
-}    
+}
