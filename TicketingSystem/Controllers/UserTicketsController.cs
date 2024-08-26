@@ -30,13 +30,13 @@ namespace TicketingSystem.Controllers
             var requests = await _requestService.GetRequestsByUserId(int.Parse(userId));
 
             // Para cada request que se obtenga, generamos un CreationDate si no está definido.
-            foreach (var request in requests)
+          /*  foreach (var request in requests)
             {
                 if (request.CreationDate == default)
                 {
                     request.CreationDate = DateTime.Now;
                 }
-            }
+            }*/
 
             if (filter == "InProgress")
             {
@@ -64,13 +64,13 @@ namespace TicketingSystem.Controllers
             var requests = await _requestService.GetRequestsByUserId(int.Parse(userId));
 
             // Para cada request que se obtenga, generamos un CreationDate si no está definido.
-            foreach (var request in requests)
+          /*  foreach (var request in requests)
             {
                 if (request.CreationDate == default)
                 {
                     request.CreationDate = DateTime.Now;
                 }
-            }
+            }*/
 
             // Filtrado de requests según el estado
             List<Request> filteredRequests = requests;

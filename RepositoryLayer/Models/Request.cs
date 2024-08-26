@@ -17,6 +17,8 @@ public partial class Request
 
     public DateOnly? EstimatedDueDate { get; set; }
 
+   // public DateTime CreationDate { get; set; }
+
     public DateOnly? RevokePermissionDate { get; set; }
 
     public string? AdminNotes { get; set; }
