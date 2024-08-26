@@ -7,6 +7,7 @@ public interface IRepository
 {
     Task<User> GetUserByEmailAsync(string email);
     Task<UserRole> GetUserRoleAsync(int userId);
+    Task<List<Request>> GetRequestsByUserIdAsync(int userId);
 }
 
 public class Repository(AppDbContext context): IRepository
@@ -40,5 +41,13 @@ public class Repository(AppDbContext context): IRepository
         return userRole?.IdRoleNavigation; // Return the related UserRole, or null if not found
     }
 
+    public async Task<List<Request>> GetRequestsByUserIdAsync(int userId)
+    {
+        return await _context.Requests
+            .Include(r => r.RequestStatusNavigation)
+            .Include(r => r.RequestTypeNavigation)
+            .Where(r => r.IdUser == userId)
+            .ToListAsync();
+    }
 
 }
