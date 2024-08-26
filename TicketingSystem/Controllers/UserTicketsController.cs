@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using RepositoryLayer.Models;
-
+using System.Collections.Generic;
 
 namespace TicketingSystem.Controllers
 {
@@ -29,15 +29,16 @@ namespace TicketingSystem.Controllers
 
             var requests = await _requestService.GetRequestsByUserId(int.Parse(userId));
 
-            // Para cada request que se obtenga, generamos un CreationDate si no está definido.
-          /*  foreach (var request in requests)
+            // Asignar la fecha de creación si no está definida
+            foreach (var request in requests)
             {
                 if (request.CreationDate == default)
                 {
                     request.CreationDate = DateTime.Now;
                 }
-            }*/
+            }
 
+            // Filtrar según el estado
             if (filter == "InProgress")
             {
                 requests = requests.Where(r => r.RequestStatusNavigation.Status == "In Progress").ToList();
@@ -63,14 +64,14 @@ namespace TicketingSystem.Controllers
 
             var requests = await _requestService.GetRequestsByUserId(int.Parse(userId));
 
-            // Para cada request que se obtenga, generamos un CreationDate si no está definido.
-          /*  foreach (var request in requests)
+            // Asignar la fecha de creación si no está definida
+            foreach (var request in requests)
             {
                 if (request.CreationDate == default)
                 {
                     request.CreationDate = DateTime.Now;
                 }
-            }*/
+            }
 
             // Filtrado de requests según el estado
             List<Request> filteredRequests = requests;

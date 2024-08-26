@@ -27,7 +27,7 @@
                     <thead>
                         <tr>
                             <th>IDRequest</th>
-                            <th>Description</th>
+                            <th>Title</th>
                             <th>Creation Date</th>
                             <th>Status</th>
                             <th>Action</th>
@@ -38,8 +38,8 @@
                         {
                             <tr>
                                 <td>@request.Id</td>
-                                <td>@request.Description</td>
-                                <td>@request.EstimatedDueDate?.ToString("yyyy-MM-dd")</td>
+                                <td>@request.Title</td>
+                                <td>@request.CreationDate.ToString("yyyy-MM-dd")</td>
                                 <td>@request.RequestStatusNavigation.Status</td>
                                 <td>
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewRequestModal" data-id="@request.Id" data-title="@request.Title" data-status="@request.RequestStatusNavigation.Status" data-description="@request.Description" data-requesttype="@request.RequestTypeNavigation.Type" data-duedate="@request.EstimatedDueDate?.ToString("yyyy-MM-dd")" data-adminnotes="@request.AdminNotes" data-resolutioninfo="@request.ResolutionInfo">
