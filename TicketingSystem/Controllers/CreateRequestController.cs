@@ -51,7 +51,6 @@ namespace TicketingSystem.Controllers
         [HttpGet("api/requests")]
         public async Task<IActionResult> GetRequests([FromQuery] string q)
         {
-            // Check the query parameter value
             if (q == "unassigned")
             {
                 var unassignedRequests = await _requestService.GetAllUnassignedRequests();
