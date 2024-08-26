@@ -10,11 +10,11 @@ namespace TicketingSystem.Controllers
 {
     public class UserTicketsController : Controller
     {
-        private readonly IRepositoryService _repositoryService;
+        private readonly IRequestService _requestService;
 
-        public UserTicketsController(IRepositoryService repositoryService)
+        public UserTicketsController(IRequestService requestService)
         {
-            _repositoryService = repositoryService;
+            _requestService = requestService;
         }
 
         // Acción para listar todos los tickets del usuario (MyRequests)
@@ -27,7 +27,16 @@ namespace TicketingSystem.Controllers
                 return Unauthorized();
             }
 
-            var requests = await _repositoryService.GetRequestsByUserId(int.Parse(userId));
+            var requests = await _requestService.GetRequestsByUserId(int.Parse(userId));
+
+            // Para cada request que se obtenga, generamos un CreationDate si no está definido.
+            foreach (var request in requests)
+            {
+                if (request.CreationDate == default)
+                {
+                    request.CreationDate = DateTime.Now;
+                }
+            }
 
             if (filter == "InProgress")
             {
@@ -51,7 +60,16 @@ namespace TicketingSystem.Controllers
                 return Unauthorized(); // Manejar el caso en que no se puede obtener el ID del usuario
             }
 
-            var requests = await _repositoryService.GetRequestsByUserId(int.Parse(userId));
+            var requests = await _requestService.GetRequestsByUserId(int.Parse(userId));
+
+            // Para cada request que se obtenga, generamos un CreationDate si no está definido.
+            foreach (var request in requests)
+            {
+                if (request.CreationDate == default)
+                {
+                    request.CreationDate = DateTime.Now;
+                }
+            }
 
             // Filtrado de requests según el estado
             List<Request> filteredRequests = requests;
