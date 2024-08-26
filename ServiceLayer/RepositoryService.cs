@@ -7,7 +7,7 @@ namespace ServiceLayer
     {
         Task<User> GetUserByEmail(string email);
         Task<UserRole> GetUserRole(int userId);
-        Task<List<Request>> GetRequestsByUserId(int userId);
+       // Task<List<Request>> GetRequestsByUserId(int userId);
     }
 
     public class RepositoryService(IRepository repository): IRepositoryService
@@ -23,10 +23,10 @@ namespace ServiceLayer
         {
             return await _repository.GetUserRoleAsync(userId);
         }
-        public async Task<List<Request>> GetRequestsByUserId(int userId)
+       /* public async Task<List<Request>> GetRequestsByUserId(int userId)
         {
             return await _repository.GetRequestsByUserIdAsync(userId);
-        }
+        }*/
 
     }
 }

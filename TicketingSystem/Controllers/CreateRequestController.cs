@@ -41,7 +41,8 @@ namespace TicketingSystem.Controllers
                     RequestStatus = 1,
                     Title = model.Title,
                     Description = model.Description,
-                    IdUser = userId
+                    IdUser = userId,
+                    CreationDate = DateTime.Now
                 };
 
                 bool result = await _requestService.CreateRequest(request);
