@@ -25,3 +25,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+sendButton.addEventListener("click", function (event) {
+    // Prevent form submission if validation fails
+    const requestTypeControlSelect = document.getElementById("RequestTypeControlSelect").value;
+    const titleField = document.getElementById("titleField").value.trim();
+    const ticketDescription = document.getElementById("ticketDescription").value.trim();
+    const dueDate = document.getElementById("dueDate").value.trim();
+
+    if (!requestTypeControlSelect || !titleField || !ticketDescription || !dueDate) {
+        alert("Please fill out all required fields.");
+        event.preventDefault(); // Prevent form submission
+    }
+});
+
+

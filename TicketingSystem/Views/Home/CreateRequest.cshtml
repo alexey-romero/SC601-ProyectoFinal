@@ -11,23 +11,24 @@
 
         <!-- Botones para envio del request y borrado de campos -->
         <div class="d-flex justify-content-around mb-4">
-            <button type="button" class="btn btn-primary btn-lg active" aria-pressed="true">Send</button>
+            <button type="submit" class="btn btn-primary btn-lg active" aria-pressed="true">Send</button>
             
             <button type="button" class="btn btn-secondary" aria-pressed="true">Clear Fields</button>
         </div>
-
+        
         <!-- Formulario de creacion del Request, centrado dentro del div -->
-        <form>
+        <form id="createRequestForm" method="post" action="/Request/Create">
             <div class="form-group mb-3">
                 <label for="RequestTypeControlSelect">Request Type</label>
-                <select class="form-control" id="RequestTypeControlSelect">
+                <select class="form-control" id="RequestTypeControlSelect" name="RequestTypeId">
                     <option value="" disabled selected>-- Select a request type --</option>
-                    <option>Pay Time Off</option>
-                    <option>Maternity Leave</option>
-                    <option>Software Install</option>
-                    <option>Hardware Fix</option>
+                    <option value="1">Software Installation/Fix</option>
+                    <option value="2">Hardware Issues</option>
+                    <option value="3">System Instance Access</option>
+                    <option value="4">System Environment Access</option>
                 </select>
             </div>
+            <!-- User shouldnt be able to change the Status on Request Creation, Request always creates as In Progress
             <div class="form-group mb-3">
                 <label for="RequestStatusControlSelect">Status</label>
                 <select class="form-control" id="RequestStatusControlSelect">
@@ -37,9 +38,10 @@
                     <option>Closed</option>
                 </select>
             </div>
+            -->
             <div class="form-group mb-3">
                 <label for="titleField">Title</label>
-                <input type="text" class="form-control" id="titleField" aria-describedby="ticketTitle" placeholder="Enter a brief Title">
+                <input type="text" class="form-control" id="titleField" name="Title" aria-describedby="ticketTitle" placeholder="Enter a brief Title">
             </div>
             <div class="form-group mb-3">
                 <label for="subjectManager">Subject Ticket's Manager</label>
@@ -47,32 +49,31 @@
             </div>
             <div class="form-group mb-3">
                 <label for="ticketDescription">Description</label>
-                <textarea class="form-control" id="ticketDescription" rows="5"></textarea>
+                <textarea class="form-control" id="ticketDescription" name="Description" rows="5"></textarea>
             </div>
             <div class="form-group mb-3">
                 <label for="dueDate">Estimated Due Date</label>
-                <input type="date" class="form-control" id="dueDate">
+                <input type="date" class="form-control" id="dueDate" name="DueDate">
             </div>
             <div class="form-group mb-3">
                 <label for="attachmentFiles">Attatch a file (Optional)</label>
-                <input type="file" class="form-control-file" id="attachmentFiles">
+                <input type="file" class="form-control-file" id="attachmentFiles" name="AttachmentFiles">
             </div>
             <div class="form-group mb-3">
                 <label for="revokingDate">Estimated Revoking Permission Date (Optional)</label>
-                <input type="date" class="form-control" id="revokingDate">
+                <input type="date" class="form-control" id="revokingDate" name="RevokingDate">
             </div>
             <div class="form-group mb-3">
                 <label for="adminNotes">Notes</label>
-                <textarea class="form-control" id="adminNotes" rows="3"></textarea>
+                <textarea class="form-control" id="adminNotes" name="AdminNotes" rows="3"></textarea>
             </div>
             <div class="form-group mb-3">
                 <label for="resolutionInformation">Resolution Information</label>
-                <textarea class="form-control" id="resolutionInformation" rows="5" readonly></textarea>
+                <textarea class="form-control" id="resolutionInformation" name="ResolutionInformation" rows="5" readonly></textarea>
             </div>
         </form>
     </div>
 </div>
-
 
 <script src="~/js/site.js"></script>
 
