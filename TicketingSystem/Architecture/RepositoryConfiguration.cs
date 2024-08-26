@@ -11,6 +11,7 @@ internal static class RepositoryConfiguration
     {
         serviceCollection.AddScoped<ISecurityRepository, SecurityRepository>();
         serviceCollection.AddScoped<IRepository, Repository>();
+        serviceCollection.AddScoped<IRequestRepository, RequestRepository>();
         serviceCollection.AddDbContext<AppDbContext>(options
             => options.UseSqlServer("Server=localhost;Database=TicketingSystem;Trusted_Connection=True;TrustServerCertificate=True;"));
     }

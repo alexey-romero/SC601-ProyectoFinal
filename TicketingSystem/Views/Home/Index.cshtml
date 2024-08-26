@@ -2,12 +2,13 @@
 @{
     ViewData["Title"] = "Home Page";
     var userName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Guest";
+    var userRole = User.FindFirst(ClaimTypes.Role)?.Value ?? "Guest";
     // var userName = "RachMax";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome, @userName!</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h4>Role type: @userRole</h4>
 
     <div class="box-container">
         <div class="box" onclick="location.href='@Url.Action("CreateRequest", "Home")';">

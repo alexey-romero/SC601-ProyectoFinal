@@ -1,0 +1,13 @@
+diff a/TicketingSystem/Controllers/RegisterController.cs b/TicketingSystem/Controllers/RegisterController.cs	(rejected hunks)
+@@ -15,7 +15,11 @@
+  
+          public IActionResult Index()
+          {
+++<<<<<<< Updated upstream
+ +            return View("/Views/Users/Register.cshtml");
+++=======
++             return View("/Views/Home/CreateRequest.cshtml");
+++>>>>>>> Stashed changes
+          }
+  
+          [HttpPost]
