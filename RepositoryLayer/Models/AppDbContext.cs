@@ -17,7 +17,7 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Request> Requests { get; set; }
 
-    public virtual DbSet<RequestStatus> RequestStatuses { get; set; }
+    public virtual DbSet<RequestStatus> RequestStatus { get; set; }
 
     public virtual DbSet<RequestType> RequestTypes { get; set; }
 
