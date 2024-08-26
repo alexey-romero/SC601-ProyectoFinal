@@ -15,7 +15,11 @@ namespace TicketingSystem.Controllers
 
         public IActionResult Index()
         {
+<<<<<<< Updated upstream
             return View("/Views/Users/Register.cshtml");
+=======
+            return View("/Views/Home/CreateRequest.cshtml");
+>>>>>>> Stashed changes
         }
 
         [HttpPost]

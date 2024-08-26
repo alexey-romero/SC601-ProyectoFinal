@@ -10,5 +10,6 @@ internal static class ServicesConfiguration
     {
         serviceCollection.AddScoped<ISecurityService, SecurityService>();
         serviceCollection.AddScoped<IRepositoryService, RepositoryService>();
+        serviceCollection.AddScoped<IRequestService, RequestService>();
     }
 }
