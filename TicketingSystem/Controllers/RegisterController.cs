@@ -15,7 +15,7 @@ namespace TicketingSystem.Controllers
 
         public IActionResult Index()
         {
-            return View("/Views/Accounts/Register.cshtml");
+            return View("/Views/Users/Register.cshtml");
         }
 
         [HttpPost]
