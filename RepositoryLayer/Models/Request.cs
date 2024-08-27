@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RepositoryLayer.Models;
 
@@ -16,6 +17,8 @@ public partial class Request
     public string? Description { get; set; }
 
     public DateOnly? EstimatedDueDate { get; set; }
+
+   // public DateTime CreationDate { get; set; }
 
     public DateOnly? RevokePermissionDate { get; set; }
 
@@ -38,4 +41,9 @@ public partial class Request
     public virtual RequestStatus RequestStatusNavigation { get; set; } = null!;
 
     public virtual RequestType RequestTypeNavigation { get; set; } = null!;
+
+    // Fecha de creación manejada a nivel de aplicación
+    [NotMapped] //Esta propiedad hace que EF ignore el creation date y no lo mapee cuando este guardando datos en la BD.
+    public DateTime CreationDate { get; set; } = DateTime.Now;  // Se inicializa con la fecha actual
+
 }

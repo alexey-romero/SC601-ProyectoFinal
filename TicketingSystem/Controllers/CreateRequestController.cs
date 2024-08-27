@@ -25,31 +25,36 @@ namespace TicketingSystem.Controllers
             //    ViewBag.RequestTypes = requestTypes;
             //}
 
-            Console.WriteLine(model);
-
             var userIdClaim = User.FindFirst("UserId")?.Value;
+            var managerIdClaim = User.FindFirst("ManagerId")?.Value;
 
             if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
             {
                 return BadRequest("User ID not found or invalid.");
             }
 
-            
-                var request = new RepositoryLayer.Models.Request
-                {
-                    RequestType = 1,
-                    RequestStatus = 1,
-                    Title = model.Title,
-                    Description = model.Description,
-                    IdUser = userId
-                };
+            int? managerId = null;
+            if (!string.IsNullOrEmpty(managerIdClaim) && int.TryParse(managerIdClaim, out var parsedManagerId))
+            {
+                managerId = parsedManagerId;
+            }
 
-                bool result = await _requestService.CreateRequest(request);
+            var request = new RepositoryLayer.Models.Request
+            {
+                RequestType = 1,
+                RequestStatus = 1,
+                Title = model.Title,
+                Description = model.Description,
+                IdUser = userId,
+                IdManager = managerId
+            };
 
-                if (result)
-                {
-                    return RedirectToAction("Index", "Home");
-                }
+            bool result = await _requestService.CreateRequest(request);
+
+            if (result)
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             ModelState.AddModelError("", "An error occurred while creating the request.");
             return View(model);

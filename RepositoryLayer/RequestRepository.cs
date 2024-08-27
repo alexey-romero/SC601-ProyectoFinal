@@ -38,7 +38,11 @@ namespace RepositoryLayer
 
         public async Task<List<Request>> GetRequestsByUserIdAsync(int userId)
         {
-            return await Context.Requests.Where(r => r.IdUser == userId).ToListAsync();
+            return await Context.Requests
+                .Include(r => r.RequestStatusNavigation)
+                .Include(r => r.RequestTypeNavigation)
+                .Where(r => r.IdUser == userId)
+                .ToListAsync();
         }
 
         public async Task<bool> CreateRequestAsync(Request request)
