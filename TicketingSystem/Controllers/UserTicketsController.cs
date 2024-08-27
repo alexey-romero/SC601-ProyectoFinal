@@ -40,9 +40,8 @@ namespace TicketingSystem.Controllers
 
             return View(requests);
         }
-
-        // Acción para listar los tickets en MyApprovals (estado visual de aprobación)
-        public async Task<IActionResult> MyApprovals(string filter = "InProgress")
+            
+        public IActionResult MyApprovals(string filter)
         {
             // Obtiene el ID del usuario autenticado desde los claims
             var userId = User.FindFirstValue("UserId");
