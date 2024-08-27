@@ -1,4 +1,4 @@
-﻿@model List<TicketingSystem.Models.MyTickets>
+﻿@model List<RepositoryLayer.Models.Request>
 
 @{
     ViewData["Title"] = "My Approvals";
@@ -6,6 +6,7 @@
 }
 
 <div class="container mt-5">
+    <h2>My Approvals</h2>
     <div class="row">
         <div class="col-2">
             <h5>Filter</h5>
@@ -20,8 +21,6 @@
         </div>
 
         <div class="col-md-9">
-            <h2>My Approvals</h2>
-
             @if (Model != null && Model.Count > 0)
             {
                 <table class="table table-striped mt-3">
@@ -35,15 +34,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var ticket in Model)
+                        @foreach (var request in Model)
                         {
                             <tr>
-                                <td>@ticket.IDRequest</td>
-                                <td>@ticket.Title</td>
-                                <td>@ticket.CreationDate.ToShortDateString()</td>
-                                <td>@ticket.Status</td>
+                                <td>@request.Id</td>
+                                <td>@request.Title</td>
+                                <td>@request.CreationDate.ToString("yyyy-MM-dd")</td>
+                                <td>@request.RequestStatusNavigation.Status</td>
                                 <td>
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewRequestModal" data-id="@ticket.IDRequest" data-title="@ticket.Title" data-status="@ticket.Status" data-description="@ticket.Description" data-duedate="@ticket.EstimatedDueDate" data-adminnotes="@ticket.AdminNotes" data-resolutioninfo="@ticket.ResolutionInfo" data-requesttype="@ticket.RequestType?.TypeName">
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewRequestModal" data-id="@request.Id" data-title="@request.Title" data-status="@request.RequestStatusNavigation.Status" data-description="@request.Description" data-requesttype="@request.RequestTypeNavigation.Type" data-duedate="@request.EstimatedDueDate?.ToString("yyyy-MM-dd")" data-adminnotes="@request.AdminNotes" data-resolutioninfo="@request.ResolutionInfo">
                                         View
                                     </button>
                                 </td>
@@ -55,64 +54,59 @@
             else
             {
                 <div class="alert alert-info mt-3" role="alert">
-                    No approved requests found at the moment.
+                    No approvals found for the selected filter.
                 </div>
             }
-
-            <!-- Modal for view request -->
-            <div class="modal fade" id="viewRequestModal" tabindex="-1" aria-labelledby="viewRequestModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="viewRequestModalLabel">View Request</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Formulario de visualización del Request -->
-                            <form>
-                                <div class="form-group mb-3">
-                                    <label for="RequestTypeControlSelect">Request Type</label>
-                                    <input type="text" class="form-control" id="RequestTypeField" readonly>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="RequestStatusControlSelect">Status</label>
-                                    <input type="text" class="form-control" id="RequestStatusField" readonly>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="titleField">Title</label>
-                                    <input type="text" class="form-control" id="titleField" readonly>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="subjectManager">Subject Ticket's Manager</label>
-                                    <input class="form-control" type="text" id="subjectManager" readonly>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="ticketDescription">Description</label>
-                                    <textarea class="form-control" id="ticketDescription" rows="5" readonly></textarea>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="dueDate">Estimated Due Date</label>
-                                    <input type="date" class="form-control" id="dueDate" readonly>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="adminNotes">Notes</label>
-                                    <textarea class="form-control" id="adminNotes" rows="3" readonly></textarea>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="resolutionInformation">Resolution Information</label>
-                                    <textarea class="form-control" id="resolutionInformation" rows="5" readonly></textarea>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div> <!-- modal-content -->
-                </div> <!-- modal-dialog -->
-            </div> <!-- modal fade -->
         </div> <!-- col-md-9 -->
     </div> <!-- row -->
 </div> <!-- container -->
+<!-- Modal for view request -->
+<div class="modal fade" id="viewRequestModal" tabindex="-1" aria-labelledby="viewRequestModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewRequestModalLabel">View Request</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulario de visualización del Request -->
+                <form>
+                    <div class="form-group mb-3">
+                        <label for="RequestTypeField">Request Type</label>
+                        <input type="text" class="form-control" id="RequestTypeField" readonly>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="RequestStatusField">Status</label>
+                        <input type="text" class="form-control" id="RequestStatusField" readonly>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="titleField">Title</label>
+                        <input type="text" class="form-control" id="titleField" readonly>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="descriptionField">Description</label>
+                        <textarea class="form-control" id="descriptionField" rows="5" readonly></textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="dueDateField">Estimated Due Date</label>
+                        <input type="date" class="form-control" id="dueDateField" readonly>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="adminNotesField">Admin Notes</label>
+                        <textarea class="form-control" id="adminNotesField" rows="3" readonly></textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="resolutionInfoField">Resolution Information</label>
+                        <textarea class="form-control" id="resolutionInfoField" rows="5" readonly></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div> <!-- modal-content -->
+    </div> <!-- modal-dialog -->
+</div> <!-- modal fade -->
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -123,20 +117,19 @@
                 var title = button.getAttribute('data-title');
                 var status = button.getAttribute('data-status');
                 var description = button.getAttribute('data-description');
-                var manager = button.getAttribute('data-manager');
+                var requestType = button.getAttribute('data-requesttype');
                 var dueDate = button.getAttribute('data-duedate');
                 var adminNotes = button.getAttribute('data-adminnotes');
                 var resolutionInfo = button.getAttribute('data-resolutioninfo');
-                var requestType = button.getAttribute('data-requesttype');
 
+                // Actualizar los campos del modal
                 document.getElementById('titleField').value = title;
-                document.getElementById('RequestStatusField').value = status;
-                document.getElementById('ticketDescription').value = description;
-                document.getElementById('subjectManager').value = manager;
-                document.getElementById('dueDate').value = dueDate ? new Date(dueDate).toISOString().split('T')[0] : '';
-                document.getElementById('adminNotes').value = adminNotes;
-                document.getElementById('resolutionInformation').value = resolutionInfo;
                 document.getElementById('RequestTypeField').value = requestType;
+                document.getElementById('RequestStatusField').value = status;
+                document.getElementById('descriptionField').value = description;
+                document.getElementById('dueDateField').value = dueDate;
+                document.getElementById('adminNotesField').value = adminNotes;
+                document.getElementById('resolutionInfoField').value = resolutionInfo;
             });
         });
     </script>

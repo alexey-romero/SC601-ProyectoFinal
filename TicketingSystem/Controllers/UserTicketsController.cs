@@ -1,58 +1,89 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TicketingSystem.Models;
+using ServiceLayer;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Security.Claims;
+using RepositoryLayer.Models;
+
 
 namespace TicketingSystem.Controllers
 {
     public class UserTicketsController : Controller
     {
-        public IActionResult MyRequests(string filter)
+        private readonly IRequestService _requestService;
+
+        public UserTicketsController(IRequestService requestService)
         {
-            // Simulación de datos (estos datos TIENEN QUE VENIR DE LA BASE DE DATOS)
-            var tickets = GetTickets();
-
-            // Convierte el filtro a RequestStatus enum si es válido
-            if (Enum.TryParse(filter, out RequestStatus status))
-            {
-                tickets = tickets.Where(t => t.Status == status).ToList();
-            }
-
-            return View(tickets);
+            _requestService = requestService;
         }
 
-        public IActionResult MyApprovals(string filter)
+        // Acción para listar todos los tickets del usuario (MyRequests)
+        public async Task<IActionResult> MyRequests(string filter = "All")
         {
-            // Si no se especifica un filtro, redirigir a la vista con el filtro "InProgress"
+            var userId = User.FindFirstValue("UserId");
 
-            if (string.IsNullOrEmpty(filter))
+            if (string.IsNullOrEmpty(userId))
             {
-                return RedirectToAction("MyApprovals", new { filter = "InProgress" });
+                return Unauthorized();
             }
 
-            var tickets = GetTickets();
+            var requests = await _requestService.GetRequestsByUserId(int.Parse(userId));
 
-            // Filtra los tickets por "In Progress" (Need Approval) y "Approved"
+            // Para cada request que se obtenga, generamos un CreationDate si no está definido.
+          /*  foreach (var request in requests)
+            {
+                if (request.CreationDate == default)
+                {
+                    request.CreationDate = DateTime.Now;
+                }
+            }*/
+
             if (filter == "InProgress")
             {
-                tickets = tickets.Where(t => t.Status == RequestStatus.InProgress).ToList();
+                requests = requests.Where(r => r.RequestStatusNavigation.Status == "In Progress").ToList();
+            }
+            else if (filter == "Closed")
+            {
+                requests = requests.Where(r => r.RequestStatusNavigation.Status == "Closed").ToList();
+            }
+
+            return View(requests);
+        }
+            
+        public async Task<IActionResult> MyApprovals(string filter)
+        {
+            // Obtiene el ID del usuario autenticado desde los claims
+            var userId = User.FindFirstValue("UserId");
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(); // Manejar el caso en que no se puede obtener el ID del usuario
+            }
+
+            var requests = await _requestService.GetRequestsByUserId(int.Parse(userId));
+
+            // Para cada request que se obtenga, generamos un CreationDate si no está definido.
+          /*  foreach (var request in requests)
+            {
+                if (request.CreationDate == default)
+                {
+                    request.CreationDate = DateTime.Now;
+                }
+            }*/
+
+            // Filtrado de requests según el estado
+            List<Request> filteredRequests = requests;
+
+            if (filter == "InProgress")
+            {
+                filteredRequests = requests.Where(r => r.RequestStatusNavigation.Status == "In Progress").ToList();
             }
             else if (filter == "Approved")
             {
-                tickets = tickets.Where(t => t.Status == RequestStatus.Approved).ToList();
+                filteredRequests = requests.Where(r => r.RequestStatusNavigation.Status == "Approved").ToList();
             }
 
-            return View(tickets);
-        }
-
-        // Simulación de una lista de tickets
-        private List<MyTickets> GetTickets()
-        {
-            return new List<MyTickets>
-            {
-                new MyTickets { IDRequest = 1, Title = "Issue with login", CreationDate = DateTime.Now.AddDays(-1), Status = RequestStatus.InProgress },
-                new MyTickets { IDRequest = 2, Title = "Cannot access email",CreationDate = DateTime.Now.AddDays(-5), Status = RequestStatus.Closed },
-                new MyTickets { IDRequest = 3, Title = "System running slow", CreationDate = DateTime.Now.AddDays(-2), Status = RequestStatus.InProgress },
-                new MyTickets { IDRequest = 4, Title = "Need access to new software", CreationDate = DateTime.Now.AddDays(-3), Status = RequestStatus.Approved }
-            };
+            return View(filteredRequests);
         }
     }
 }
