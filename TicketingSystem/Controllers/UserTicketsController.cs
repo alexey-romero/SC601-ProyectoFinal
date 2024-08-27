@@ -50,7 +50,7 @@ namespace TicketingSystem.Controllers
             return View(requests);
         }
             
-        public IActionResult MyApprovals(string filter)
+        public async Task<IActionResult> MyApprovals(string filter)
         {
             // Obtiene el ID del usuario autenticado desde los claims
             var userId = User.FindFirstValue("UserId");
